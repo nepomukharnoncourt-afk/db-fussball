@@ -1,7 +1,7 @@
 # 📘 Projekt-Anleitung: Flask + MySQL auf PythonAnywhere
 Diese Anleitung beschreibt den kompletten Ablauf, um das Projekt auszuführen und im Team (GitHub + PythonAnywhere) zu entwickeln.
 
-**Hinweis:** Nur eine Person pro Team muss diese Anleitung durchführen.
+**Hinweis:** Nur eine Person pro Team muss diese Anleitung durchführen. 
 
 ## ✅ Voraussetzungen
 
