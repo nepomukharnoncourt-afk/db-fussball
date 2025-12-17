@@ -45,6 +45,12 @@
           <button type="submit" class="btn btn-primary">Hinzufügen</button>
         </form>
       </div>
+@app.route("/users", methods=["GET"]) 
+@login_required 
+def users():     
+    users = db_read("SELECT username FROM users ORDER BY username", ()) 
+    return render_template("users.html", users=users) 
+
 {% endblock %}
 
 
