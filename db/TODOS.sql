@@ -11,3 +11,15 @@ CREATE TABLE todos (
     due DATETIME,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE Spieler (
+    Spielernr INT AUTO_INCREMENT PRIMARY KEY,
+    vorname VARCHAR(20),
+    nachname VARCHAR(20),
+    Tore INT,
+    Vorlagen INT,
+    Marktwert INT,
+    Position VARCHAR(20),
+    Einsatzzeit INT,
+    FOREIGN KEY (team) REFERENCES Club(teamnr.)
+    
