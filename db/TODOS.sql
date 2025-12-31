@@ -21,5 +21,23 @@ CREATE TABLE Spieler (
     Marktwert INT,
     Position VARCHAR(20),
     Einsatzzeit INT,
-    FOREIGN KEY (team) REFERENCES Club(teamnr.)
+    FOREIGN KEY (team) REFERENCES Club(teamnr)
+    
+CREATE TABLE Clubs (
+   teamnr INT AUTO_INCREMENT PRIMARY KEY,
+    Tore INT,
+    Gegentore INT,
+    Name VARCHAR(30),
+
+CREATE TABLE Cheftrainer (
+    Trainernr INT AUTO_INCREMENT PRIMARY KEY,
+    Titel INT,
+    Vorname VARCHAR(20),
+    Nachname VARCHAR(20),
+    FOREIGN KEY (team) REFERENCES Club(teamnr)
+
+CREATE TABLE Liga (
+    liganr INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(20),
+    Land VARCHAR(20),
     
