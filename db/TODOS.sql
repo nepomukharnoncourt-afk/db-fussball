@@ -10,34 +10,41 @@ CREATE TABLE todos (
     content VARCHAR(100),
     due DATETIME,
     FOREIGN KEY (user_id) REFERENCES users(id)
-);
+    );
 
 CREATE TABLE Spieler (
-    Spielernr INT AUTO_INCREMENT PRIMARY KEY,
+    spielernr INT AUTO_INCREMENT PRIMARY KEY,
     vorname VARCHAR(20),
     nachname VARCHAR(20),
-    Tore INT,
-    Vorlagen INT,
-    Marktwert INT,
-    Position VARCHAR(20),
-    Einsatzzeit INT,
+    tore INT,
+    vorlagen INT,
+    marktwert INT,
+    position VARCHAR(20),
+    einsatzzeit INT,
     FOREIGN KEY (team) REFERENCES Club(teamnr)
+    );
     
 CREATE TABLE Clubs (
-   teamnr INT AUTO_INCREMENT PRIMARY KEY,
-    Tore INT,
-    Gegentore INT,
-    Name VARCHAR(30),
+    teamnr INT AUTO_INCREMENT PRIMARY KEY,
+    tore INT,
+    gegentore INT,
+    name VARCHAR(30),
+    platzierung INT,
+    titel INT,
+    FOREIGN KEY (liga) REFERENCES Liga(liganr)
+    );
 
 CREATE TABLE Cheftrainer (
-    Trainernr INT AUTO_INCREMENT PRIMARY KEY,
-    Titel INT,
-    Vorname VARCHAR(20),
-    Nachname VARCHAR(20),
+    trainernr INT AUTO_INCREMENT PRIMARY KEY,
+    titel INT,
+    vorname VARCHAR(20),
+    nachname VARCHAR(20),
     FOREIGN KEY (team) REFERENCES Club(teamnr)
+    );
 
 CREATE TABLE Liga (
     liganr INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(20),
-    Land VARCHAR(20),
+    name VARCHAR(20),
+    land VARCHAR(20)
+    );
     
