@@ -20,10 +20,10 @@ CREATE TABLE Spieler (
     vorlagen INT,
     marktwert INT,
     position VARCHAR(20),
-    einsatzzeit INT,
     FOREIGN KEY (team) REFERENCES Club(teamnr)
     );
-    
+
+
 CREATE TABLE Clubs (
     teamnr INT AUTO_INCREMENT PRIMARY KEY,
     tore INT,
@@ -48,3 +48,11 @@ CREATE TABLE Liga (
     land VARCHAR(20)
     );
     
+Insert into Spieler (vorname, nachname, position, tore, vorlagen, marktwert, team) Values
+('Vinicius', 'Junior', 'LF', 5, 7, '180 mio', 1)
+('Michael', 'Olise', 'RF', 6, 12, '130 mio', 2)
+
+
+Insert into Cheftrainer (vorname, nachname, team) Values
+('Xabi', 'Alonso', 1)
+('Vincent', 'Kompany', 2)
