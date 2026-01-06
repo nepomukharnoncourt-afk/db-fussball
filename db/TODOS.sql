@@ -30,13 +30,11 @@ CREATE TABLE Clubs (
     gegentore INT,
     name VARCHAR(30),
     platzierung INT,
-    titel INT,
     FOREIGN KEY (liga) REFERENCES Liga(liganr)
     );
 
 CREATE TABLE Cheftrainer (
     trainernr INT AUTO_INCREMENT PRIMARY KEY,
-    titel INT,
     vorname VARCHAR(20),
     nachname VARCHAR(20),
     FOREIGN KEY (team) REFERENCES Club(teamnr)
@@ -60,3 +58,7 @@ Insert into Cheftrainer (vorname, nachname, team) Values
 Insert into liga (name, land, liganr) Values
 ('Laliga', 'Spanien')
 ('Bundesliga', 'Deutschland')
+
+INSERT INTO Clubs (tore, gegentore, name, platzierung) Values
+(30. 20, "Real Madrid", 2)
+(50, 15, "Bayern München", 1)
