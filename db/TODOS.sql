@@ -55,7 +55,7 @@ Insert into Cheftrainer (vorname, nachname, team) Values
 ('Xabi', 'Alonso', 1)
 ('Vincent', 'Kompany', 2)
 
-Insert into liga (name, land, liganr) Values
+Insert into liga (name, land) Values
 ('Laliga', 'Spanien')
 ('Bundesliga', 'Deutschland')
 
