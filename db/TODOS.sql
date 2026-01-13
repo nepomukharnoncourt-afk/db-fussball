@@ -46,356 +46,259 @@ CREATE TABLE Liga (
     land VARCHAR(20)
     );
     
-INSERT INTO Spieler (vorname, nachname, position, tore, vorlagen, marktwert, team) VALUES
-('Thibaut', 'Courtois', 'GK', 0, 0, '45 mio', 1),
-('Dani', 'Carvajal', 'RV', 1, 4, '20 mio', 1),
-('Antonio', 'Rüdiger', 'IV', 2, 1, '35 mio', 1),
-('David', 'Alaba', 'IV', 1, 2, '30 mio', 1),
-('Ferland', 'Mendy', 'LV', 0, 3, '25 mio', 1),
-('Aurelien', 'Tchouameni', 'ZDM', 2, 2, '90 mio', 1),
-('Toni', 'Kroos', 'ZM', 3, 8, '15 mio', 1),
-('Jude', 'Bellingham', 'ZOM', 12, 6, '180 mio', 1),
-('Vinicius', 'Junior', 'LF', 5, 7, '180 mio', 1),
-('Rodrygo', 'Goes', 'RF', 6, 5, '110 mio', 1),
-('Joselu', 'Mato', 'ST', 7, 2, '8 mio', 1),
-('Marc-André', 'ter Stegen', 'GK', 0, 0, '30 mio', 2),
-('Joao', 'Cancelo', 'RV', 2, 6, '40 mio', 2),
-('Ronald', 'Araujo', 'IV', 3, 1, '70 mio', 2),
-('Jules', 'Kounde', 'IV', 1, 2, '60 mio', 2),
-('Alejandro', 'Balde', 'LV', 1, 4, '50 mio', 2),
-('Frenkie', 'de Jong', 'ZM', 4, 7, '80 mio', 2),
-('Pedri', 'ZM', 5, 6, '90 mio', 2),
-('Ilkay', 'Gündogan', 'ZOM', 6, 8, '15 mio', 2),
-('Raphinha', 'RF', 7, 6, '55 mio', 2),
-('Robert', 'Lewandowski', 'ST', 15, 3, '20 mio', 2),
-('Joao', 'Felix', 'LF', 6, 5, '45 mio', 2),
-('Jan', 'Oblak', 'GK', 0, 0, '35 mio', 3),
-('Nahuel', 'Molina', 'RV', 2, 4, '45 mio', 3),
-('Jose', 'Gimenez', 'IV', 2, 1, '40 mio', 3),
-('Axel', 'Witsel', 'IV', 1, 1, '8 mio', 3),
-('Reinildo', 'Mandava', 'LV', 0, 2, '20 mio', 3),
-('Rodrigo', 'de Paul', 'ZM', 4, 6, '50 mio', 3),
-('Koke', 'ZM', 2, 7, '10 mio', 3),
-('Marcos', 'Llorente', 'ZOM', 6, 5, '45 mio', 3),
-('Antoine', 'Griezmann', 'ST', 14, 8, '70 mio', 3),
-('Alvaro', 'Morata', 'ST', 12, 3, '25 mio', 3),
-('Samuel', 'Lino', 'LF', 5, 4, '30 mio', 3),
-('Manuel', 'Neuer', 'GK', 0, 0, '12 mio', 6),
-('Joshua', 'Kimmich', 'RV', 3, 9, '70 mio', 6),
-('Matthijs', 'de Ligt', 'IV', 2, 1, '65 mio', 6),
-('Dayot', 'Upamecano', 'IV', 2, 0, '60 mio', 6),
-('Alphonso', 'Davies', 'LV', 3, 7, '70 mio', 6),
-('Leon', 'Goretzka', 'ZM', 6, 4, '45 mio', 6),
-('Konrad', 'Laimer', 'ZM', 3, 5, '35 mio', 6),
-('Jamal', 'Musiala', 'ZOM', 10, 8, '120 mio', 6),
-('Leroy', 'Sané', 'RF', 9, 7, '60 mio', 6),
-('Kingsley', 'Coman', 'LF', 6, 6, '50 mio', 6),
-('Harry', 'Kane', 'ST', 20, 7, '100 mio', 6),
-('Gregor', 'Kobel', 'GK', 0, 0, '40 mio', 7),
-('Julian', 'Ryerson', 'RV', 1, 4, '25 mio', 7),
-('Mats', 'Hummels', 'IV', 2, 1, '8 mio', 7),
-('Nico', 'Schlotterbeck', 'IV', 1, 2, '45 mio', 7),
-('Ian', 'Maatsen', 'LV', 3, 5, '35 mio', 7),
-('Emre', 'Can', 'ZDM', 4, 3, '20 mio', 7),
-('Marcel', 'Sabitzer', 'ZM', 5, 4, '25 mio', 7),
-('Julian', 'Brandt', 'ZOM', 7, 8, '40 mio', 7),
-('Donyell', 'Malen', 'RF', 9, 4, '45 mio', 7),
-('Karim', 'Adeyemi', 'LF', 6, 3, '40 mio', 7),
-('Niclas', 'Füllkrug', 'ST', 11, 2, '18 mio', 7),
-('Ederson', 'Moraes', 'GK', 0, 1, '40 mio', 11),
-('Kyle', 'Walker', 'RV', 1, 3, '20 mio', 11),
-('Ruben', 'Dias', 'IV', 2, 1, '80 mio', 11),
-('John', 'Stones', 'IV', 1, 2, '45 mio', 11),
-('Josko', 'Gvardiol', 'LV', 2, 4, '75 mio', 11),
-('Rodri', 'Hernandez', 'ZDM', 6, 7, '110 mio', 11),
-('Kevin', 'De Bruyne', 'ZOM', 8, 14, '65 mio', 11),
-('Bernardo', 'Silva', 'ZM', 5, 9, '70 mio', 11),
-('Phil', 'Foden', 'LF', 12, 6, '110 mio', 11),
-('Jack', 'Grealish', 'RF', 4, 7, '65 mio', 11),
-('Erling', 'Haaland', 'ST', 22, 4, '180 mio', 11),
-('Gianluigi', 'Donnarumma', 'GK', 0, 0, '45 mio', 21),
-('Achraf', 'Hakimi', 'RV', 4, 7, '70 mio', 21),
-('Marquinhos', 'IV', 2, 1, '65 mio', 21),
-('Milan', 'Skriniar', 'IV', 1, 0, '50 mio', 21),
-('Nuno', 'Mendes', 'LV', 3, 6, '70 mio', 21),
-('Manuel', 'Ugarte', 'ZDM', 2, 3, '55 mio', 21),
-('Vitinha', 'ZM', 4, 6, '60 mio', 21),
-('Ousmane', 'Dembele', 'RF', 5, 10, '60 mio', 21),
-('Kylian', 'Mbappe', 'LF', 25, 6, '180 mio', 21),
-('Randal', 'Kolo Muani', 'ST', 12, 4, '80 mio', 21),
-('Bradley', 'Barcola', 'LF', 6, 5, '45 mio', 21),
-('Alex', 'Remiro', 'GK', 0, 0, '25 mio', 4),
-('Hamari', 'Traore', 'RV', 1, 4, '20 mio', 4),
-('Robin', 'Le Normand', 'IV', 2, 1, '45 mio', 4),
-('Igor', 'Zubeldia', 'IV', 1, 0, '25 mio', 4),
-('Aihen', 'Munoz', 'LV', 0, 3, '18 mio', 4),
-('Martin', 'Zubimendi', 'ZDM', 3, 4, '60 mio', 4),
-('Mikel', 'Merino', 'ZM', 6, 5, '50 mio', 4),
-('Brais', 'Mendez', 'ZOM', 5, 6, '35 mio', 4),
-('Takefusa', 'Kubo', 'RF', 7, 4, '55 mio', 4),
-('Mikel', 'Oyarzabal', 'LF', 8, 5, '60 mio', 4),
-('Umar', 'Sadiq', 'ST', 6, 2, '30 mio', 4),
-('Marko', 'Dmitrovic', 'GK', 0, 0, '6 mio', 5),
-('Jesus', 'Navas', 'RV', 1, 5, '3 mio', 5),
-('Sergio', 'Ramos', 'IV', 3, 1, '4 mio', 5),
-('Loic', 'Bade', 'IV', 1, 0, '30 mio', 5),
-('Marcos', 'Acuña', 'LV', 2, 4, '20 mio', 5),
-('Fernando', 'Reges', 'ZDM', 1, 2, '5 mio', 5),
-('Ivan', 'Rakitic', 'ZM', 4, 6, '8 mio', 5),
-('Suso', 'Fernandez', 'ZOM', 3, 5, '10 mio', 5),
-('Lucas', 'Ocampos', 'RF', 6, 4, '18 mio', 5),
-('Youssef', 'En-Nesyri', 'ST', 12, 2, '25 mio', 5),
-('Erik', 'Lamela', 'LF', 5, 3, '7 mio', 5),
-('Peter', 'Gulacsi', 'GK', 0, 0, '12 mio', 8),
-('Benjamin', 'Henrichs', 'RV', 2, 5, '30 mio', 8),
-('Willi', 'Orban', 'IV', 3, 1, '25 mio', 8),
-('Mohamed', 'Simakan', 'IV', 1, 2, '35 mio', 8),
-('David', 'Raum', 'LV', 2, 7, '40 mio', 8),
-('Xaver', 'Schlager', 'ZDM', 3, 3, '28 mio', 8),
-('Kevin', 'Kampl', 'ZM', 2, 5, '8 mio', 8),
-('Dani', 'Olmo', 'ZOM', 8, 6, '60 mio', 8),
-('Lois', 'Openda', 'ST', 15, 4, '70 mio', 8),
-('Yussuf', 'Poulsen', 'ST', 6, 2, '10 mio', 8),
-('Christoph', 'Baumgartner', 'LF', 7, 5, '35 mio', 8),
-('Lukas', 'Hradecky', 'GK', 0, 0, '8 mio', 9),
-('Jeremie', 'Frimpong', 'RV', 8, 10, '60 mio', 9),
-('Jonathan', 'Tah', 'IV', 2, 1, '35 mio', 9),
-('Edmond', 'Tapsoba', 'IV', 1, 1, '45 mio', 9),
-('Alex', 'Grimaldo', 'LV', 7, 11, '50 mio', 9),
-('Robert', 'Andrich', 'ZDM', 4, 3, '25 mio', 9),
-('Granit', 'Xhaka', 'ZM', 5, 7, '20 mio', 9),
-('Florian', 'Wirtz', 'ZOM', 12, 10, '120 mio', 9),
-('Jonas', 'Hofmann', 'RF', 6, 8, '22 mio', 9),
-('Victor', 'Boniface', 'ST', 14, 3, '55 mio', 9),
-('Amine', 'Adli', 'LF', 6, 4, '28 mio', 9),
-('Kevin', 'Trapp', 'GK', 0, 0, '10 mio', 10),
-('Tuta', 'Silva', 'RV', 1, 2, '20 mio', 10),
-('Robin', 'Koch', 'IV', 2, 1, '18 mio', 10),
-('William', 'Pacho', 'IV', 1, 0, '35 mio', 10),
-('Philipp', 'Max', 'LV', 2, 5, '10 mio', 10),
-('Ellyes', 'Skhiri', 'ZDM', 4, 4, '25 mio', 10),
-('Mario', 'Götze', 'ZM', 5, 6, '12 mio', 10),
-('Farès', 'Chaibi', 'ZOM', 6, 7, '30 mio', 10),
-('Ansgar', 'Knauff', 'RF', 4, 5, '18 mio', 10),
-('Omar', 'Marmoush', 'ST', 12, 4, '40 mio', 10),
-('Hugo', 'Ekitike', 'LF', 7, 3, '35 mio', 10),
-('Yann', 'Sommer', 'GK', 0, 0, '8 mio', 16),
-('Denzel', 'Dumfries', 'RV', 4, 5, '30 mio', 16),
-('Alessandro', 'Bastoni', 'IV', 2, 3, '60 mio', 16),
-('Francesco', 'Acerbi', 'IV', 1, 0, '5 mio', 16),
-('Federico', 'Dimarco', 'LV', 4, 7, '45 mio', 16),
-('Hakan', 'Calhanoglu', 'ZDM', 8, 9, '40 mio', 16),
-('Nicolo', 'Barella', 'ZM', 6, 8, '70 mio', 16),
-('Henrikh', 'Mkhitaryan', 'ZOM', 5, 6, '8 mio', 16),
-('Lautaro', 'Martinez', 'ST', 18, 4, '110 mio', 16),
-('Marcus', 'Thuram', 'ST', 13, 6, '80 mio', 16),
-('Carlos', 'Augusto', 'LF', 3, 4, '20 mio', 16),
-('Mike', 'Maignan', 'GK', 0, 0, '45 mio', 17),
-('Davide', 'Calabria', 'RV', 1, 3, '20 mio', 17),
-('Fikayo', 'Tomori', 'IV', 2, 1, '45 mio', 17),
-('Malick', 'Thiaw', 'IV', 1, 0, '30 mio', 17),
-('Theo', 'Hernandez', 'LV', 6, 5, '70 mio', 17),
-('Ismael', 'Bennacer', 'ZDM', 3, 4, '35 mio', 17),
-('Ruben', 'Loftus-Cheek', 'ZM', 7, 3, '30 mio', 17),
-('Tijjani', 'Reijnders', 'ZOM', 4, 6, '40 mio', 17),
-('Christian', 'Pulisic', 'RF', 8, 7, '45 mio', 17),
-('Rafael', 'Leao', 'LF', 12, 8, '90 mio', 17),
-('Olivier', 'Giroud', 'ST', 10, 3, '4 mio', 17),
-('Wojciech', 'Szczesny', 'GK', 0, 0, '12 mio', 18),
-('Danilo', 'Luiz', 'RV', 2, 3, '15 mio', 18),
-('Bremer', 'Silva', 'IV', 3, 0, '55 mio', 18),
-('Federico', 'Gatti', 'IV', 1, 1, '18 mio', 18),
-('Andrea', 'Cambiaso', 'LV', 2, 4, '25 mio', 18),
-('Manuel', 'Locatelli', 'ZDM', 3, 4, '30 mio', 18),
-('Adrien', 'Rabiot', 'ZM', 6, 5, '25 mio', 18),
-('Weston', 'McKennie', 'ZM', 4, 4, '28 mio', 18),
-('Federico', 'Chiesa', 'LF', 10, 6, '60 mio', 18),
-('Dusan', 'Vlahovic', 'ST', 14, 3, '75 mio', 18),
-('Moise', 'Kean', 'ST', 6, 2, '25 mio', 18),
-('Philipp', 'Kohn', 'GK', 0, 0, '12 mio', 22),
-('Vanderson', 'de Oliveira', 'RV', 2, 4, '30 mio', 22),
-('Guillermo', 'Maripan', 'IV', 2, 0, '20 mio', 22),
-('Wilfried', 'Singo', 'IV', 1, 1, '28 mio', 22),
-('Caio', 'Henrique', 'LV', 3, 6, '35 mio', 22),
-('Youssouf', 'Fofana', 'ZDM', 4, 5, '30 mio', 22),
-('Aleksandr', 'Golovin', 'ZM', 7, 6, '35 mio', 22),
-('Takumi', 'Minamino', 'ZOM', 8, 5, '20 mio', 22),
-('Maghnes', 'Akliouche', 'RF', 6, 6, '30 mio', 22),
-('Wissam', 'Ben Yedder', 'ST', 15, 4, '18 mio', 22),
-('Breel', 'Embolo', 'LF', 7, 3, '30 mio', 22),
-('Pau', 'Lopez', 'GK', 0, 0, '10 mio', 23),
-('Jonathan', 'Clauss', 'RV', 2, 6, '25 mio', 23),
-('Samuel', 'Gigot', 'IV', 1, 0, '8 mio', 23),
-('Chancel', 'Mbemba', 'IV', 2, 1, '25 mio', 23),
-('Renan', 'Lodi', 'LV', 2, 5, '30 mio', 23),
-('Jordan', 'Veretout', 'ZM', 5, 6, '20 mio', 23),
-('Geoffrey', 'Kondogbia', 'ZDM', 2, 3, '15 mio', 23),
-('Azzedine', 'Ounahi', 'ZOM', 4, 5, '30 mio', 23),
-('Ismaila', 'Sarr', 'RF', 8, 4, '35 mio', 23),
-('Pierre-Emerick', 'Aubameyang', 'ST', 14, 3, '5 mio', 23),
-('Joaquin', 'Correa', 'LF', 6, 4, '18 mio', 23),
-('David', 'Raya', 'GK', 0, 0, '40 mio', 12),
-('Ben', 'White', 'RV', 2, 5, '50 mio', 12),
-('William', 'Saliba', 'IV', 2, 1, '80 mio', 12),
-('Gabriel', 'Magalhaes', 'IV', 3, 1, '65 mio', 12),
-('Oleksandr', 'Zinchenko', 'LV', 1, 4, '40 mio', 12),
-('Declan', 'Rice', 'ZDM', 6, 7, '120 mio', 12),
-('Martin', 'Ødegaard', 'ZOM', 8, 10, '100 mio', 12),
-('Kai', 'Havertz', 'ZM', 7, 5, '70 mio', 12),
-('Bukayo', 'Saka', 'RF', 14, 11, '130 mio', 12),
-('Gabriel', 'Martinelli', 'LF', 12, 6, '90 mio', 12),
-('Gabriel', 'Jesus', 'ST', 9, 6, '70 mio', 12),
-('Alisson', 'Becker', 'GK', 0, 0, '55 mio', 13),
-('Trent', 'Alexander-Arnold', 'RV', 3, 12, '80 mio', 13),
-('Virgil', 'van Dijk', 'IV', 4, 2, '60 mio', 13),
-('Ibrahima', 'Konate', 'IV', 2, 1, '55 mio', 13),
-('Andrew', 'Robertson', 'LV', 2, 9, '45 mio', 13),
-('Alexis', 'Mac Allister', 'ZM', 6, 6, '70 mio', 13),
-('Dominik', 'Szoboszlai', 'ZM', 7, 8, '75 mio', 13),
-('Curtis', 'Jones', 'ZOM', 4, 5, '40 mio', 13),
-('Mohamed', 'Salah', 'RF', 18, 10, '90 mio', 13),
-('Luis', 'Diaz', 'LF', 11, 6, '75 mio', 13),
-('Darwin', 'Nunez', 'ST', 13, 5, '85 mio', 13),
-('Robert', 'Sanchez', 'GK', 0, 0, '25 mio', 14),
-('Reece', 'James', 'RV', 2, 5, '65 mio', 14),
-('Thiago', 'Silva', 'IV', 1, 1, '3 mio', 14),
-('Levi', 'Colwill', 'IV', 1, 2, '45 mio', 14),
-('Ben', 'Chilwell', 'LV', 2, 4, '40 mio', 14),
-('Enzo', 'Fernandez', 'ZM', 5, 8, '90 mio', 14),
-('Moises', 'Caicedo', 'ZDM', 3, 4, '100 mio', 14),
-('Conor', 'Gallagher', 'ZM', 6, 5, '45 mio', 14),
-('Cole', 'Palmer', 'RF', 12, 9, '70 mio', 14),
-('Raheem', 'Sterling', 'LF', 9, 6, '45 mio', 14),
-('Nicolas', 'Jackson', 'ST', 11, 4, '55 mio', 14),
-('Andre', 'Onana', 'GK', 0, 0, '40 mio', 15),
-('Diogo', 'Dalot', 'RV', 2, 4, '35 mio', 15),
-('Lisandro', 'Martinez', 'IV', 2, 1, '55 mio', 15),
-('Raphael', 'Varane', 'IV', 1, 0, '8 mio', 15),
-('Luke', 'Shaw', 'LV', 1, 5, '35 mio', 15),
-('Casemiro', 'ZDM', 4, 3, '30 mio', 15),
-('Bruno', 'Fernandes', 'ZOM', 10, 12, '75 mio', 15),
-('Mason', 'Mount', 'ZM', 4, 5, '55 mio', 15),
-('Marcus', 'Rashford', 'LF', 15, 6, '85 mio', 15),
-('Antony', 'RF', 6, 4, '50 mio', 15),
-('Rasmus', 'Hojlund', 'ST', 12, 3, '70 mio', 15),
-('Rui', 'Patricio', 'GK', 0, 0, '5 mio', 19),
-('Zeki', 'Celik', 'RV', 1, 3, '15 mio', 19),
-('Gianluca', 'Mancini', 'IV', 3, 1, '30 mio', 19),
-('Chris', 'Smalling', 'IV', 1, 0, '6 mio', 19),
-('Leonardo', 'Spinazzola', 'LV', 2, 4, '18 mio', 19),
-('Bryan', 'Cristante', 'ZDM', 4, 4, '25 mio', 19),
-('Leandro', 'Paredes', 'ZM', 3, 5, '20 mio', 19),
-('Lorenzo', 'Pellegrini', 'ZOM', 7, 8, '45 mio', 19),
-('Paulo', 'Dybala', 'RF', 12, 9, '60 mio', 19),
-('Romelu', 'Lukaku', 'ST', 15, 4, '35 mio', 19),
-('Stephan', 'El Shaarawy', 'LF', 6, 4, '10 mio', 19),
-('Alex', 'Meret', 'GK', 0, 0, '20 mio', 20),
-('Giovanni', 'Di Lorenzo', 'RV', 3, 6, '35 mio', 20),
-('Amir', 'Rrahmani', 'IV', 2, 0, '30 mio', 20),
-('Juan', 'Jesus', 'IV', 1, 0, '5 mio', 20),
-('Mathias', 'Olivera', 'LV', 2, 4, '25 mio', 20),
-('Stanislav', 'Lobotka', 'ZDM', 2, 7, '40 mio', 20),
-('Andre-Frank', 'Zambo Anguissa', 'ZM', 6, 5, '45 mio', 20),
-('Piotr', 'Zielinski', 'ZOM', 8, 7, '40 mio', 20),
-('Khvicha', 'Kvaratskhelia', 'LF', 14, 9, '90 mio', 20),
-('Matteo', 'Politano', 'RF', 7, 6, '30 mio', 20),
-('Victor', 'Osimhen', 'ST', 18, 4, '120 mio', 20),
-('Anthony', 'Lopes', 'GK', 0, 0, '8 mio', 24),
-('Clinton', 'Mata', 'RV', 1, 3, '12 mio', 24),
-('Dejan', 'Lovren', 'IV', 1, 0, '4 mio', 24),
-('Jake', 'OBrien', 'IV', 1, 1, '15 mio', 24),
-('Nicolas', 'Tagliafico', 'LV', 2, 4, '20 mio', 24),
-('Corentin', 'Tolisso', 'ZM', 5, 4, '15 mio', 24),
-('Maxence', 'Caqueret', 'ZM', 4, 6, '30 mio', 24),
-('Rayan', 'Cherki', 'ZOM', 7, 8, '45 mio', 24),
-('Ernest', 'Nuamah', 'RF', 6, 4, '30 mio', 24),
-('Alexandre', 'Lacazette', 'ST', 16, 3, '12 mio', 24),
-('Malick', 'Fofana', 'LF', 5, 3, '25 mio', 24),
-('Marcin', 'Bulka', 'GK', 0, 0, '18 mio', 25),
-('Jordan', 'Lotomba', 'RV', 1, 3, '15 mio', 25),
-('Jean-Clair', 'Todibo', 'IV', 2, 1, '45 mio', 25),
-('Dante', 'Bonfim', 'IV', 1, 0, '3 mio', 25),
-('Melvin', 'Bard', 'LV', 1, 4, '20 mio', 25),
-('Khephren', 'Thuram', 'ZM', 6, 5, '50 mio', 25),
-('Pablo', 'Rosario', 'ZDM', 3, 3, '15 mio', 25),
-('Morgan', 'Sansón', 'ZOM', 5, 4, '20 mio', 25),
-('Terem', 'Moffi', 'ST', 14, 3, '35 mio', 25),
-('Gaetan', 'Laborde', 'ST', 11, 4, '25 mio', 25),
-('Sofiane', 'Diop', 'LF', 6, 5, '30 mio', 25);
+import time
+import re
+import requests
+import pandas as pd
 
-INSERT INTO Cheftrainer (vorname, nachname, team) VALUES
-('Carlo', 'Ancelotti', 1),
-('Xavi', 'Hernandez', 2),
-('Diego', 'Simeone', 3),
-('Imanol', 'Alguacil', 4),
-('Quique', 'Sanchez Flores', 5),
+# -------------------------
+# Einstellungen
+# -------------------------
+SEASON_ID = 2025  # Saison 2025/26 bei Transfermarkt
+BASE = "https://www.transfermarkt.com"
 
-('Vincent', 'Kompany', 6),
-('Edin', 'Terzic', 7),
-('Marco', 'Rose', 8),
-('Xabi', 'Alonso', 9),
-('Dino', 'Toppmöller', 10),
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120 Safari/537.36"
+    ),
+    "Accept-Language": "en-US,en;q=0.9",
+}
 
-('Pep', 'Guardiola', 11),
-('Mikel', 'Arteta', 12),
-('Jürgen', 'Klopp', 13),
-('Mauricio', 'Pochettino', 14),
-('Erik', 'ten Hag', 15),
+REQUEST_DELAY_SEC = 2.0  # ggf. erhöhen, wenn TM blockt
 
-('Simone', 'Inzaghi', 16),
-('Stefano', 'Pioli', 17),
-('Massimiliano', 'Allegri', 18),
-('Daniele', 'De Rossi', 19),
-('Walter', 'Mazzarri', 20),
+# Liga-Codes bei Transfermarkt:
+# Premier League GB1, LaLiga ES1, Serie A IT1, Bundesliga L1, Ligue 1 FR1
 
-('Luis', 'Enrique', 21),
-('Adi', 'Hütter', 22),
-('Gennaro', 'Gattuso', 23),
-('Pierre', 'Sage', 24),
-('Francesco', 'Farioli', 25);
+CLUBS = [
+    # Premier League (Top 5)
+    {"club_name": "Arsenal", "tm_id": 11, "wettbewerb_id": "GB1"},
+    {"club_name": "Manchester City", "tm_id": 281, "wettbewerb_id": "GB1"},
+    {"club_name": "Aston Villa", "tm_id": 405, "wettbewerb_id": "GB1"},
+    {"club_name": "Liverpool", "tm_id": 31, "wettbewerb_id": "GB1"},
+    {"club_name": "Brentford", "tm_id": 1148, "wettbewerb_id": "GB1"},
 
-INSERT INTO liga (liganr, name, land) VALUES
-(1, 'LaLiga', 'Spanien'),
-(2, 'Bundesliga', 'Deutschland'),
-(3, 'Premier League', 'England'),
-(4, 'Serie A', 'Italien'),
-(5, 'Ligue 1', 'Frankreich');
+    # LaLiga (Top 5)
+    {"club_name": "FC Barcelona", "tm_id": 131, "wettbewerb_id": "ES1"},
+    {"club_name": "Real Madrid", "tm_id": 418, "wettbewerb_id": "ES1"},
+    {"club_name": "Villarreal CF", "tm_id": 1050, "wettbewerb_id": "ES1"},
+    {"club_name": "Atlético Madrid", "tm_id": 13, "wettbewerb_id": "ES1"},
+    {"club_name": "Espanyol Barcelona", "tm_id": 714, "wettbewerb_id": "ES1"},
 
-INSERT INTO Clubs (id, name, liga, tore, gegentore, platzierung) VALUES
--- LaLiga
-(1, 'Real Madrid', 1, 30, 20, 2),
-(2, 'FC Barcelona', 1, 28, 18, 3),
-(3, 'Atletico Madrid', 1, 26, 17, 4),
-(4, 'Real Sociedad', 1, 24, 19, 5),
-(5, 'Sevilla FC', 1, 22, 21, 6),
+    # Serie A (Top 5)
+    {"club_name": "Inter", "tm_id": 46, "wettbewerb_id": "IT1"},
+    {"club_name": "AC Milan", "tm_id": 5, "wettbewerb_id": "IT1"},
+    {"club_name": "SSC Napoli", "tm_id": 6195, "wettbewerb_id": "IT1"},
+    {"club_name": "Juventus", "tm_id": 506, "wettbewerb_id": "IT1"},
+    {"club_name": "AS Roma", "tm_id": 12, "wettbewerb_id": "IT1"},
 
--- Bundesliga
-(6, 'Bayern München', 2, 50, 15, 1),
-(7, 'Borussia Dortmund', 2, 45, 22, 2),
-(8, 'RB Leipzig', 2, 42, 20, 3),
-(9, 'Bayer Leverkusen', 2, 40, 18, 4),
-(10, 'Eintracht Frankfurt', 2, 35, 25, 5),
+    # Bundesliga (Top 5)
+    {"club_name": "Bayern München", "tm_id": 27, "wettbewerb_id": "L1"},
+    {"club_name": "Borussia Dortmund", "tm_id": 16, "wettbewerb_id": "L1"},
+    {"club_name": "Bayer 04 Leverkusen", "tm_id": 15, "wettbewerb_id": "L1"},
+    {"club_name": "RB Leipzig", "tm_id": 23826, "wettbewerb_id": "L1"},
+    {"club_name": "TSG 1899 Hoffenheim", "tm_id": 533, "wettbewerb_id": "L1"},
 
--- Premier League
-(11, 'Manchester City', 3, 48, 17, 1),
-(12, 'Arsenal', 3, 44, 20, 2),
-(13, 'Liverpool', 3, 46, 22, 3),
-(14, 'Chelsea', 3, 38, 28, 6),
-(15, 'Manchester United', 3, 36, 30, 7),
+    # Ligue 1 (Top 5)
+    {"club_name": "RC Lens", "tm_id": 826, "wettbewerb_id": "FR1"},
+    {"club_name": "Paris Saint-Germain", "tm_id": 583, "wettbewerb_id": "FR1"},
+    {"club_name": "Olympique Marseille", "tm_id": 244, "wettbewerb_id": "FR1"},
+    {"club_name": "LOSC Lille", "tm_id": 1082, "wettbewerb_id": "FR1"},
+    {"club_name": "Olympique Lyon", "tm_id": 1041, "wettbewerb_id": "FR1"},
+]
 
--- Serie A
-(16, 'Inter Mailand', 4, 45, 18, 1),
-(17, 'AC Milan', 4, 40, 22, 2),
-(18, 'Juventus', 4, 38, 20, 3),
-(19, 'AS Roma', 4, 34, 25, 5),
-(20, 'SSC Neapel', 4, 42, 21, 4),
+# -------------------------
+# Helpers
+# -------------------------
 
--- Ligue 1
-(21, 'Paris Saint-Germain', 5, 50, 16, 1),
-(22, 'AS Monaco', 5, 42, 24, 2),
-(23, 'Olympique Marseille', 5, 40, 26, 3),
-(24, 'Olympique Lyon', 5, 35, 28, 4),
-(25, 'OGC Nizza', 5, 32, 22, 5);
+def get_html(url: str) -> str:
+    r = requests.get(url, headers=HEADERS, timeout=30)
+    r.raise_for_status()
+    return r.text
+
+def normalize_market_value(val: str) -> str:
+    """
+    Normalisiert Transfermarkt-Format z.B. '€80.00m' -> '80 mio'
+    oder '€1.20bn' -> '1.2 mrd'
+    """
+    if not isinstance(val, str):
+        return ""
+    v = val.strip()
+    v = v.replace("€", "").strip()
+    v = v.replace(",", "")  # falls mal 1,20
+    # m/bn sind auf .com üblich
+    v = v.replace("m", " mio")
+    v = v.replace("bn", " mrd")
+    return v.strip()
+
+def split_name(full: str):
+    full = (full or "").strip()
+    if not full:
+        return "", None
+    parts = full.split()
+    if len(parts) == 1:
+        return parts[0], None
+    return parts[0], " ".join(parts[1:])
+
+def sql_escape(s: str) -> str:
+    return (s or "").replace("'", "''")
+
+def find_best_table(tables: list[pd.DataFrame], must_have: set[str]) -> pd.DataFrame | None:
+    """
+    Pickt aus read_html-Tabellen die passendste, indem sie mind. alle Spalten enthält.
+    """
+    for t in tables:
+        cols = set(map(str, t.columns))
+        if must_have.issubset(cols):
+            return t
+    return None
+
+# -------------------------
+# Scraper
+# -------------------------
+
+def fetch_market_values_by_player(club_tm_id: int) -> dict[str, str]:
+    """
+    Kader-Seite -> mapping Spielername -> Marktwert
+    """
+    url = f"{BASE}/-/kader/verein/{club_tm_id}/saison_id/{SEASON_ID}"
+    html = get_html(url)
+    tables = pd.read_html(html)
+
+    # Auf .com ist die Kader-Tabelle oft die mit Spalten wie 'Player', 'Market value'
+    # Wir suchen breit:
+    target = None
+    for t in tables:
+        cols = set(map(str, t.columns))
+        if "Player" in cols and ("Market value" in cols or "Market Value" in cols):
+            target = t
+            break
+    if target is None:
+        # Fallback: erste Tabelle nehmen, wenn sie 'Player' enthält
+        for t in tables:
+            if "Player" in set(map(str, t.columns)):
+                target = t
+                break
+
+    mv = {}
+    if target is None:
+        return mv
+
+    player_col = "Player"
+    mv_col = "Market value" if "Market value" in target.columns else ("Market Value" if "Market Value" in target.columns else None)
+
+    if mv_col is None:
+        return mv
+
+    for _, row in target.iterrows():
+        name = str(row.get(player_col, "")).strip()
+        val = str(row.get(mv_col, "")).strip()
+        if name and val and val.lower() != "nan":
+            mv[name] = normalize_market_value(val)
+    return mv
+
+def fetch_league_stats(club_tm_id: int, wettbewerb_id: str) -> pd.DataFrame:
+    """
+    Leistungsdaten-Seite -> Tore/Vorlagen NUR für die Liga (wettbewerb_id) & Saison (SEASON_ID)
+    """
+    url = (
+        f"{BASE}/-/leistungsdaten/verein/{club_tm_id}"
+        f"/saison_id/{SEASON_ID}/plus/1?wettbewerb_id={wettbewerb_id}"
+    )
+    html = get_html(url)
+    tables = pd.read_html(html)
+
+    # Auf .com enthält die Tabelle typischerweise: Player, Goals, Assists (nicht immer Assists!)
+    # Wir suchen nach Player + Goals, Assists optional
+    t = find_best_table(tables, must_have={"Player", "Goals"})
+    if t is None:
+        return pd.DataFrame()
+
+    # Assists ist manchmal nicht vorhanden je nach Ansicht -> dann 0
+    if "Assists" not in t.columns:
+        t["Assists"] = 0
+
+    # Position kann je nach Tabelle 'Pos.' oder 'Position' heißen
+    if "Position" not in t.columns and "Pos." in t.columns:
+        t["Position"] = t["Pos."]
+
+    # Nur benötigte Felder
+    keep = ["Player", "Position", "Goals", "Assists"]
+    for k in keep:
+        if k not in t.columns:
+            t[k] = ""
+    return t[keep].copy()
+
+def build_player_inserts_for_club(club_name: str, club_tm_id: int, wettbewerb_id: str) -> list[str]:
+    mv_map = fetch_market_values_by_player(club_tm_id)
+    stats = fetch_league_stats(club_tm_id, wettbewerb_id)
+
+    inserts = []
+    if stats.empty:
+        return inserts
+
+    for _, row in stats.iterrows():
+        full_name = str(row.get("Player", "")).strip()
+        if not full_name or full_name.lower() == "nan":
+            continue
+
+        vor, nach = split_name(full_name)
+        pos = str(row.get("Position", "")).strip()
+        goals = row.get("Goals", 0)
+        assists = row.get("Assists", 0)
+
+        # numeric cleanup
+        def to_int(x):
+            if pd.isna(x):
+                return 0
+            s = str(x).strip()
+            s = re.sub(r"[^\d]", "", s)
+            return int(s) if s.isdigit() else 0
+
+        goals_i = to_int(goals)
+        assists_i = to_int(assists)
+
+        market_value = mv_map.get(full_name, "")
+
+        nach_sql = "NULL" if not nach else f"'{sql_escape(nach)}'"
+
+        inserts.append(
+            f"('{sql_escape(vor)}', {nach_sql}, '{sql_escape(pos)}', {goals_i}, {assists_i}, "
+            f"'{sql_escape(market_value)}', (SELECT id FROM Clubs WHERE name='{sql_escape(club_name)}'))"
+        )
+
+    return inserts
+
+def main():
+    all_value_rows = []
+    for c in CLUBS:
+        club_name = c["club_name"]
+        tm_id = c["tm_id"]
+        wettbewerb_id = c["wettbewerb_id"]
+
+        print(f"Scraping: {club_name} (verein={tm_id}, liga={wettbewerb_id})")
+        try:
+            rows = build_player_inserts_for_club(club_name, tm_id, wettbewerb_id)
+            all_value_rows.extend(rows)
+        except Exception as e:
+            print(f"  ERROR bei {club_name}: {e}")
+
+        time.sleep(REQUEST_DELAY_SEC)
+
+    if not all_value_rows:
+        print("Keine Spieler-Daten gefunden (evtl. Block/HTML-Struktur geändert).")
+        return
+
+    sql = (
+        "INSERT INTO Spieler (vorname, nachname, position, tore, vorlagen, marktwert, team) VALUES\n"
+        + ",\n".join(all_value_rows)
+        + ";"
+    )
+    print(sql)
+
+if __name__ == "__main__":
+    main()
+
 
 
 
