@@ -9,6 +9,12 @@ from auth import login_manager, authenticate, register_user
 from flask_login import login_user, logout_user, login_required, current_user
 import logging
 
+
+from flask import jsonify, abort
+import re
+
+
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -139,90 +145,72 @@ def users():
     return render_template("users.html", users=users)
 
 
-@app.route("/dbexplorer", methods=["GET", "POST"])
+def _list_tables():
+    """
+    Returns a list of table names in the currently selected MySQL database.
+    Works with mysql-connector dictionary cursor.
+    """
+    rows = db_read("SHOW TABLES", ())
+    if not rows:
+        return []
+    # MySQL returns a single column with a dynamic name like "Tables_in_<db>"
+    key = next(iter(rows[0].keys()))
+    return [r[key] for r in rows]
+
+
+def _is_safe_identifier(name: str) -> bool:
+    """
+    Strict allowlist: letters, numbers, underscore only; must start with letter/underscore.
+    Prevents SQL injection since identifiers can't be parameterized.
+    """
+    return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name or ""))
+
+
+@app.route("/dbexplorer", methods=["GET"])
 @login_required
 def dbexplorer():
-    # Get DB name from env (same one db.py uses)
-    db_name = os.getenv("DB_DATABASE")
+    tables = _list_tables()
+    return render_template("dbexplorer.html", tables=tables)
 
-    # All available tables in this database
-    table_rows = db_read(
-        """
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = %s
-        ORDER BY table_name
-        """,
-        (db_name,),
+
+@app.get("/dbexplorer/data")
+@login_required
+def dbexplorer_data():
+    table = (request.args.get("table") or "").strip()
+    limit_raw = (request.args.get("limit") or "200").strip()
+
+    # Validate limit
+    try:
+        limit = int(limit_raw)
+    except ValueError:
+        limit = 200
+    limit = max(1, min(limit, 1000))  # clamp to 1..1000
+
+    # Validate table name (both regex + must exist in DB)
+    if not _is_safe_identifier(table):
+        abort(400, description="Invalid table name.")
+
+    tables = _list_tables()
+    if table not in tables:
+        abort(404, description="Table not found.")
+
+    # Column metadata
+    desc_rows = db_read(f"DESCRIBE `{table}`", ())
+    columns = [r["Field"] for r in desc_rows]  # mysql DESCRIBE returns Field/Type/Null/Key/Default/Extra
+
+    # Data
+    rows = db_read(f"SELECT * FROM `{table}` LIMIT %s", (limit,))
+
+    return jsonify(
+        {
+            "table": table,
+            "columns": columns,
+            "rows": rows,
+            "limit": limit,
+            "row_count": len(rows),
+        }
     )
-    available_tables = [r["table_name"] for r in table_rows]
-    allowed = set(available_tables)
 
-    selected_tables = []
-    bad_tables = []
-    limit = 50
-
-    if request.method == "POST":
-        # limit
-        limit_raw = (request.form.get("limit") or "50").strip()
-        try:
-            limit = int(limit_raw)
-        except ValueError:
-            limit = 50
-        limit = max(1, min(limit, 500))  # clamp 1..500
-
-        # selected via checkboxes
-        selected_tables.extend(request.form.getlist("tables"))
-
-        # selected via manual text field
-        manual = (request.form.get("table_name") or "").strip()
-        if manual:
-            selected_tables.append(manual)
-
-        # normalize + dedupe while preserving order
-        cleaned = []
-        seen = set()
-        for t in selected_tables:
-            t = (t or "").strip()
-            if not t or t in seen:
-                continue
-            seen.add(t)
-            cleaned.append(t)
-        selected_tables = cleaned
-
-    # whitelist validation
-    bad_tables = [t for t in selected_tables if t not in allowed]
-    selected_tables = [t for t in selected_tables if t in allowed]
-
-    # Fetch data for selected tables
-    table_data = {}   # table -> list[dict]
-    table_cols = {}   # table -> list[str]
-
-    for t in selected_tables:
-        # Safe because:
-        # - t is whitelisted from information_schema
-        # - limit is an int we clamp
-        rows = db_read(f"SELECT * FROM `{t}` LIMIT {limit}")
-
-        if rows:
-            cols = list(rows[0].keys())
-        else:
-            # If empty, still show column headers
-            desc = db_read(f"DESCRIBE `{t}`")
-            cols = [d["Field"] for d in desc]
-
-        table_data[t] = rows
-        table_cols[t] = cols
-
-    return render_template(
-        "dbexplorer.html",
-        available_tables=available_tables,
-        selected_tables=selected_tables,
-        bad_tables=bad_tables,
-        limit=limit,
-        table_data=table_data,
-        table_cols=table_cols,
-    )
 
 
 
