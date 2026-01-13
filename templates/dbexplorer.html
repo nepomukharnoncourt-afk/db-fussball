@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .dbx-wrap {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .dbx-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    padding: 14px;
+  }
+
+  .dbx-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+  }
+
+  .dbx-muted {
+    color: rgba(0,0,0,0.6);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .dbx-form .row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .dbx-form label {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .dbx-form input[type="text"],
+  .dbx-form input[type="number"]{
+    width: 100%;
+    padding: 10px 10px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 10px;
+    outline: none;
+  }
+
+  .dbx-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #f7f7f7;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .dbx-btn.primary {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+
+  .dbx-btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .dbx-tablelist {
+    max-height: 55vh;
+    overflow: auto;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 10px;
+    background: #fafafa;
+  }
+
+  .dbx-tablelist .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 6px;
+    border-radius: 8px;
+  }
+
+  .dbx-tablelist .item:hover {
+    background: rgba(0,0,0,0.04);
+  }
+
+  .dbx-pill {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+
+  .dbx-alert {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #fff3cd;
+    border: 1px solid #ffe69c;
+    color: #664d03;
+    margin-bottom: 12px;
+  }
+
+  .dbx-results .table-card {
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .dbx-results .table-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    margin-bottom: 10px;
+  }
+
+  .dbx-results .table-name {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .dbx-results .table-meta {
+    font-size: 12px;
+    color: rgba(0,0,0,0.55);
+  }
+
+  .dbx-scroll {
+    overflow: auto;
+    max-height: 60vh;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+  }
+
+  table.dbx {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+    background: #fff;
+  }
+
+  table.dbx th, table.dbx td {
+    padding: 10px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  table.dbx th {
+    position: sticky;
+    top: 0;
+    background: #f4f4f4;
+    z-index: 2;
+    text-align: left;
+    font-weight: 800;
+  }
+
+  table.dbx tr:hover td {
+    background: rgba(0,0,0,0.02);
+  }
+
+  .dbx-empty {
+    padding: 12px;
+    color: rgba(0,0,0,0.65);
+  }
+
+  @media (max-width: 900px) {
+    .dbx-wrap {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="dbx-wrap">
+
+  <!-- LEFT: Controls -->
+  <div class="dbx-card">
+    <h2 class="dbx-title">DB Explorer</h2>
+
+    <form class="dbx-form" method="POST" action="{{ url_for('dbexplorer') }}">
+      <div class="row">
+        <div>
+          <label for="table_name">Add table by name</label>
+          <input id="table_name" name="table_name" type="text" placeholder="e.g. todos" />
+          <div class="dbx-muted">Tip: You can type a table name and/or use the checkboxes below.</div>
+        </div>
+
+        <div>
+          <label for="limit">Row limit (1–500)</label>
+          <input id="limit" name="limit" type="number" min="1" max="500" value="{{ limit or 50 }}" />
+        </div>
+
+        <div class="dbx-btn-row">
+          <button class="dbx-btn primary" type="submit">Load selected tables</button>
+          <button class="dbx-btn" type="button" onclick="toggleAll(true)">Select all</button>
+          <button class="dbx-btn" type="button" onclick="toggleAll(false)">Select none</button>
+        </div>
+      </div>
+
+      <label style="margin-top:10px;">Available tables</label>
+      <div class="dbx-tablelist">
+        {% for t in available_tables %}
+          <div class="item">
+            <input
+              type="checkbox"
+              name="tables"
+              value="{{ t }}"
+              id="tbl-{{ loop.index }}"
+              {% if t in selected_tables %}checked{% endif %}
+            />
+            <label for="tbl-{{ loop.index }}" style="margin:0; font-weight:600;">
+              {{ t }}
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if selected_tables %}
+        <div style="margin-top: 12px;">
+          <div class="dbx-muted" style="margin-bottom:6px;">Selected:</div>
+          {% for t in selected_tables %}
+            <span class="dbx-pill">{{ t }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div class="dbx-card dbx-results">
+    <h2 class="dbx-title">Results</h2>
+
+    {% if bad_tables and bad_tables|length > 0 %}
+      <div class="dbx-alert">
+        These table(s) were not found in the current database and were ignored:
+        <strong>{{ bad_tables|join(", ") }}</strong>
+      </div>
+    {% endif %}
+
+    {% if not selected_tables %}
+      <div class="dbx-empty">
+        Select one or more tables on the left, then click <strong>Load selected tables</strong>.
+      </div>
+    {% else %}
+      {% for t in selected_tables %}
+        <div class="table-card">
+          <div class="table-head">
+            <p class="table-name">{{ t }}</p>
+            <div class="table-meta">
+              Showing up to {{ limit }} row(s)
+              {% if table_data[t] is defined %}
+                · Returned {{ table_data[t]|length }} row(s)
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="dbx-scroll">
+            <table class="dbx">
+              <thead>
+                <tr>
+                  {% for col in table_cols[t] %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% if table_data[t] and table_data[t]|length > 0 %}
+                  {% for row in table_data[t] %}
+                    <tr>
+                      {% for col in table_cols[t] %}
+                        <td>
+                          {% set v = row.get(col) %}
+                          {% if v is none %}
+                            <span style="color: rgba(0,0,0,0.35);">NULL</span>
+                          {% else %}
+                            {{ v }}
+                          {% endif %}
+                        </td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="{{ table_cols[t]|length }}">
+                      <div class="dbx-empty">No rows returned (table may be empty).</div>
+                    </td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+  function toggleAll(on) {
+    const boxes = document.querySelectorAll('input[type="checkbox"][name="tables"]');
+    boxes.forEach(b => b.checked = on);
+  }
+</script>
+{% endblock %}
+
