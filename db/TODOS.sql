@@ -4,7 +4,13 @@ CREATE TABLE users (
     password VARCHAR(250) NOT NULL
 );
 
-
+CREATE TABLE todos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content VARCHAR(100),
+    due DATETIME,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    );
 
 CREATE TABLE Spieler (
     spielernr INT AUTO_INCREMENT PRIMARY KEY,
