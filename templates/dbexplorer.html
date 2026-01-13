@@ -1,326 +1,243 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-  .dbx-wrap {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 16px;
-    align-items: start;
-  }
-
-  .dbx-card {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-    padding: 14px;
-  }
-
-  .dbx-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 10px 0;
-  }
-
-  .dbx-muted {
-    color: rgba(0,0,0,0.6);
-    font-size: 13px;
-    margin-top: 6px;
-  }
-
-  .dbx-form .row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .dbx-form label {
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 4px;
-    display: block;
-  }
-
-  .dbx-form input[type="text"],
-  .dbx-form input[type="number"]{
-    width: 100%;
-    padding: 10px 10px;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 10px;
-    outline: none;
-  }
-
-  .dbx-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.12);
-    background: #f7f7f7;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .dbx-btn.primary {
-    background: #111;
-    color: #fff;
-    border-color: #111;
-  }
-
-  .dbx-btn-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .dbx-tablelist {
-    max-height: 55vh;
-    overflow: auto;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 10px;
-    padding: 10px;
-    background: #fafafa;
-  }
-
-  .dbx-tablelist .item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 6px;
-    border-radius: 8px;
-  }
-
-  .dbx-tablelist .item:hover {
-    background: rgba(0,0,0,0.04);
-  }
-
-  .dbx-pill {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: rgba(0,0,0,0.06);
-    font-size: 12px;
-    font-weight: 600;
-    margin-right: 6px;
-    margin-bottom: 6px;
-  }
-
-  .dbx-alert {
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: #fff3cd;
-    border: 1px solid #ffe69c;
-    color: #664d03;
-    margin-bottom: 12px;
-  }
-
-  .dbx-results .table-card {
-    margin-bottom: 14px;
-    overflow: hidden;
-  }
-
-  .dbx-results .table-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    margin-bottom: 10px;
-  }
-
-  .dbx-results .table-name {
-    font-size: 16px;
-    font-weight: 800;
-    margin: 0;
-  }
-
-  .dbx-results .table-meta {
-    font-size: 12px;
-    color: rgba(0,0,0,0.55);
-  }
-
-  .dbx-scroll {
-    overflow: auto;
-    max-height: 60vh;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 12px;
-  }
-
-  table.dbx {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 13px;
-    background: #fff;
-  }
-
-  table.dbx th, table.dbx td {
-    padding: 10px 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    vertical-align: top;
-    white-space: nowrap;
-  }
-
-  table.dbx th {
-    position: sticky;
-    top: 0;
-    background: #f4f4f4;
-    z-index: 2;
-    text-align: left;
-    font-weight: 800;
-  }
-
-  table.dbx tr:hover td {
-    background: rgba(0,0,0,0.02);
-  }
-
-  .dbx-empty {
-    padding: 12px;
-    color: rgba(0,0,0,0.65);
-  }
-
-  @media (max-width: 900px) {
-    .dbx-wrap {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
-
 <div class="dbx-wrap">
+  <div class="dbx-header">
+    <div>
+      <h1 class="dbx-title">DB Explorer</h1>
+      <p class="dbx-subtitle">Pick a table to view. Uses a safe allowlist of existing tables.</p>
+    </div>
 
-  <!-- LEFT: Controls -->
-  <div class="dbx-card">
-    <h2 class="dbx-title">DB Explorer</h2>
-
-    <form class="dbx-form" method="POST" action="{{ url_for('dbexplorer') }}">
-      <div class="row">
-        <div>
-          <label for="table_name">Add table by name</label>
-          <input id="table_name" name="table_name" type="text" placeholder="e.g. todos" />
-          <div class="dbx-muted">Tip: You can type a table name and/or use the checkboxes below.</div>
-        </div>
-
-        <div>
-          <label for="limit">Row limit (1–500)</label>
-          <input id="limit" name="limit" type="number" min="1" max="500" value="{{ limit or 50 }}" />
-        </div>
-
-        <div class="dbx-btn-row">
-          <button class="dbx-btn primary" type="submit">Load selected tables</button>
-          <button class="dbx-btn" type="button" onclick="toggleAll(true)">Select all</button>
-          <button class="dbx-btn" type="button" onclick="toggleAll(false)">Select none</button>
-        </div>
+    <div class="dbx-controls">
+      <div class="dbx-control">
+        <label for="dbx-limit">Row limit</label>
+        <input id="dbx-limit" type="number" min="1" max="1000" value="200" />
       </div>
 
-      <label style="margin-top:10px;">Available tables</label>
-      <div class="dbx-tablelist">
-        {% for t in available_tables %}
-          <div class="item">
-            <input
-              type="checkbox"
-              name="tables"
-              value="{{ t }}"
-              id="tbl-{{ loop.index }}"
-              {% if t in selected_tables %}checked{% endif %}
-            />
-            <label for="tbl-{{ loop.index }}" style="margin:0; font-weight:600;">
-              {{ t }}
-            </label>
-          </div>
+      <div class="dbx-control">
+        <label for="dbx-manual">Open table (manual)</label>
+        <div class="dbx-inline">
+          <input id="dbx-manual" type="text" placeholder="e.g. todos" />
+          <button id="dbx-open-manual" class="dbx-btn">Open</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dbx-layout">
+    <!-- Left: table list -->
+    <aside class="dbx-sidebar">
+      <div class="dbx-search">
+        <input id="dbx-filter" type="text" placeholder="Filter tables…" />
+      </div>
+
+      <div id="dbx-table-buttons" class="dbx-table-buttons">
+        {% for t in tables %}
+          <button class="dbx-table-btn" data-table="{{ t }}">{{ t }}</button>
         {% endfor %}
       </div>
+    </aside>
 
-      {% if selected_tables %}
-        <div style="margin-top: 12px;">
-          <div class="dbx-muted" style="margin-bottom:6px;">Selected:</div>
-          {% for t in selected_tables %}
-            <span class="dbx-pill">{{ t }}</span>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- RIGHT: Results -->
-  <div class="dbx-card dbx-results">
-    <h2 class="dbx-title">Results</h2>
-
-    {% if bad_tables and bad_tables|length > 0 %}
-      <div class="dbx-alert">
-        These table(s) were not found in the current database and were ignored:
-        <strong>{{ bad_tables|join(", ") }}</strong>
+    <!-- Right: output -->
+    <main class="dbx-main">
+      <div class="dbx-status">
+        <span id="dbx-current">No table selected</span>
+        <span id="dbx-meta" class="dbx-meta"></span>
       </div>
-    {% endif %}
 
-    {% if not selected_tables %}
-      <div class="dbx-empty">
-        Select one or more tables on the left, then click <strong>Load selected tables</strong>.
-      </div>
-    {% else %}
-      {% for t in selected_tables %}
-        <div class="table-card">
-          <div class="table-head">
-            <p class="table-name">{{ t }}</p>
-            <div class="table-meta">
-              Showing up to {{ limit }} row(s)
-              {% if table_data[t] is defined %}
-                · Returned {{ table_data[t]|length }} row(s)
-              {% endif %}
-            </div>
-          </div>
+      <div id="dbx-error" class="dbx-error" style="display:none;"></div>
 
-          <div class="dbx-scroll">
-            <table class="dbx">
-              <thead>
-                <tr>
-                  {% for col in table_cols[t] %}
-                    <th>{{ col }}</th>
-                  {% endfor %}
-                </tr>
-              </thead>
-              <tbody>
-                {% if table_data[t] and table_data[t]|length > 0 %}
-                  {% for row in table_data[t] %}
-                    <tr>
-                      {% for col in table_cols[t] %}
-                        <td>
-                          {% set v = row.get(col) %}
-                          {% if v is none %}
-                            <span style="color: rgba(0,0,0,0.35);">NULL</span>
-                          {% else %}
-                            {{ v }}
-                          {% endif %}
-                        </td>
-                      {% endfor %}
-                    </tr>
-                  {% endfor %}
-                {% else %}
-                  <tr>
-                    <td colspan="{{ table_cols[t]|length }}">
-                      <div class="dbx-empty">No rows returned (table may be empty).</div>
-                    </td>
-                  </tr>
-                {% endif %}
-              </tbody>
-            </table>
-          </div>
+      <div class="dbx-table-wrap">
+        <table id="dbx-table" class="dbx-table" style="display:none;">
+          <thead id="dbx-thead"></thead>
+          <tbody id="dbx-tbody"></tbody>
+        </table>
+
+        <div id="dbx-empty" class="dbx-empty">
+          Select a table from the left, or type a name above.
         </div>
-      {% endfor %}
-    {% endif %}
+      </div>
+    </main>
   </div>
-
 </div>
 
-<script>
-  function toggleAll(on) {
-    const boxes = document.querySelectorAll('input[type="checkbox"][name="tables"]');
-    boxes.forEach(b => b.checked = on);
+<style>
+  .dbx-wrap { max-width: 1200px; margin: 0 auto; padding: 1.25rem; }
+  .dbx-header { display: flex; gap: 1.25rem; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+  .dbx-title { margin: 0; font-size: 1.6rem; }
+  .dbx-subtitle { margin: .25rem 0 0; color: #666; }
+  .dbx-controls { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .dbx-control label { display:block; font-size: .85rem; color: #444; margin-bottom: .35rem; }
+  .dbx-control input { padding: .5rem .6rem; border: 1px solid #ddd; border-radius: 8px; min-width: 160px; }
+  .dbx-inline { display:flex; gap: .5rem; align-items:center; }
+
+  .dbx-layout { display: grid; grid-template-columns: 260px 1fr; gap: 1.25rem; margin-top: 1.25rem; }
+  @media (max-width: 900px) { .dbx-layout { grid-template-columns: 1fr; } }
+
+  .dbx-sidebar { border: 1px solid #eee; border-radius: 12px; padding: .75rem; background: #fff; }
+  .dbx-search input { width: 100%; padding: .55rem .65rem; border: 1px solid #ddd; border-radius: 10px; }
+
+  .dbx-table-buttons { margin-top: .75rem; display:flex; flex-direction: column; gap: .5rem; max-height: 60vh; overflow:auto; padding-right: .25rem; }
+  .dbx-table-btn { text-align:left; padding: .55rem .7rem; border: 1px solid #e6e6e6; border-radius: 10px; background: #fafafa; cursor: pointer; }
+  .dbx-table-btn:hover { background: #f2f2f2; }
+  .dbx-table-btn.active { border-color: #bbb; background: #ededed; font-weight: 600; }
+
+  .dbx-btn { padding: .55rem .8rem; border: 1px solid #ddd; border-radius: 10px; background: #fafafa; cursor: pointer; }
+  .dbx-btn:hover { background: #f2f2f2; }
+
+  .dbx-main { border: 1px solid #eee; border-radius: 12px; padding: .9rem; background: #fff; overflow:hidden; }
+  .dbx-status { display:flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: .65rem; border-bottom: 1px solid #f0f0f0; }
+  .dbx-meta { color: #666; font-size: .9rem; }
+
+  .dbx-error { margin-top: .75rem; padding: .75rem; border-radius: 10px; background: #fff3f3; border: 1px solid #ffd1d1; color: #8a1f1f; }
+
+  .dbx-table-wrap { margin-top: .9rem; }
+  .dbx-empty { color:#666; padding: 1rem; border: 1px dashed #ddd; border-radius: 12px; background: #fcfcfc; }
+
+  .dbx-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .dbx-table thead th {
+    position: sticky; top: 0;
+    background: #f6f6f6;
+    border-bottom: 1px solid #e8e8e8;
+    padding: .55rem .6rem;
+    text-align: left;
+    font-size: .9rem;
+    white-space: nowrap;
   }
+  .dbx-table tbody td {
+    border-bottom: 1px solid #f0f0f0;
+    padding: .5rem .6rem;
+    vertical-align: top;
+    font-size: .92rem;
+  }
+  .dbx-table tbody tr:hover td { background: #fcfcfc; }
+  .dbx-null { color:#888; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  .dbx-cell-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+</style>
+
+<script>
+  const btnContainer = document.getElementById("dbx-table-buttons");
+  const filterInput = document.getElementById("dbx-filter");
+  const limitInput = document.getElementById("dbx-limit");
+  const manualInput = document.getElementById("dbx-manual");
+  const openManualBtn = document.getElementById("dbx-open-manual");
+
+  const currentEl = document.getElementById("dbx-current");
+  const metaEl = document.getElementById("dbx-meta");
+  const errorEl = document.getElementById("dbx-error");
+  const emptyEl = document.getElementById("dbx-empty");
+
+  const tableEl = document.getElementById("dbx-table");
+  const theadEl = document.getElementById("dbx-thead");
+  const tbodyEl = document.getElementById("dbx-tbody");
+
+  function setError(msg) {
+    if (!msg) {
+      errorEl.style.display = "none";
+      errorEl.textContent = "";
+      return;
+    }
+    errorEl.style.display = "block";
+    errorEl.textContent = msg;
+  }
+
+  function setActiveButton(tableName) {
+    const buttons = btnContainer.querySelectorAll(".dbx-table-btn");
+    buttons.forEach(b => b.classList.toggle("active", b.dataset.table === tableName));
+  }
+
+  function renderTable(columns, rows) {
+    // Head
+    theadEl.innerHTML = "";
+    const trh = document.createElement("tr");
+    columns.forEach(col => {
+      const th = document.createElement("th");
+      th.textContent = col;
+      trh.appendChild(th);
+    });
+    theadEl.appendChild(trh);
+
+    // Body
+    tbodyEl.innerHTML = "";
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      columns.forEach(col => {
+        const td = document.createElement("td");
+        const val = r[col];
+
+        if (val === null || typeof val === "undefined") {
+          td.innerHTML = '<span class="dbx-null">NULL</span>';
+        } else {
+          // Show objects safely (shouldn't happen with mysql-connector, but just in case)
+          const txt = (typeof val === "object") ? JSON.stringify(val) : String(val);
+          td.textContent = txt;
+
+          // Make very long values more readable
+          if (txt.length > 80) td.classList.add("dbx-cell-mono");
+        }
+        tr.appendChild(td);
+      });
+      tbodyEl.appendChild(tr);
+    });
+
+    emptyEl.style.display = "none";
+    tableEl.style.display = "table";
+  }
+
+  async function loadTable(tableName) {
+    setError(null);
+    currentEl.textContent = `Loading: ${tableName} …`;
+    metaEl.textContent = "";
+    tableEl.style.display = "none";
+    emptyEl.style.display = "block";
+
+    const limit = Number(limitInput.value || 200);
+    const url = `/dbexplorer/data?table=${encodeURIComponent(tableName)}&limit=${encodeURIComponent(limit)}`;
+
+    try {
+      const res = await fetch(url, { headers: { "Accept": "application/json" } });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Request failed (${res.status})`);
+      }
+      const data = await res.json();
+
+      currentEl.textContent = `Table: ${data.table}`;
+      metaEl.textContent = `${data.row_count} row(s) shown (limit ${data.limit})`;
+
+      renderTable(data.columns, data.rows);
+      setActiveButton(data.table);
+    } catch (e) {
+      currentEl.textContent = "No table selected";
+      metaEl.textContent = "";
+      setError(`Could not load table "${tableName}". ${e.message}`);
+    }
+  }
+
+  // Click handlers for table buttons
+  btnContainer.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".dbx-table-btn");
+    if (!btn) return;
+    loadTable(btn.dataset.table);
+  });
+
+  // Manual open
+  openManualBtn.addEventListener("click", () => {
+    const name = (manualInput.value || "").trim();
+    if (name) loadTable(name);
+  });
+  manualInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") openManualBtn.click();
+  });
+
+  // Filter table list
+  filterInput.addEventListener("input", () => {
+    const q = (filterInput.value || "").toLowerCase();
+    const buttons = btnContainer.querySelectorAll(".dbx-table-btn");
+    buttons.forEach(b => {
+      const show = b.dataset.table.toLowerCase().includes(q);
+      b.style.display = show ? "" : "none";
+    });
+  });
 </script>
 {% endblock %}
-
