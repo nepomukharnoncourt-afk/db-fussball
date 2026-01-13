@@ -10,9 +10,6 @@ from flask_login import login_user, logout_user, login_required, current_user
 import logging
 
 
-from flask import jsonify, abort
-import re
-
 
 
 logging.basicConfig(
@@ -145,71 +142,7 @@ def users():
     return render_template("users.html", users=users)
 
 
-def _list_tables():
-    """
-    Returns a list of table names in the currently selected MySQL database.
-    Works with mysql-connector dictionary cursor.
-    """
-    rows = db_read("SHOW TABLES", ())
-    if not rows:
-        return []
-    # MySQL returns a single column with a dynamic name like "Tables_in_<db>"
-    key = next(iter(rows[0].keys()))
-    return [r[key] for r in rows]
-
-
-def _is_safe_identifier(name: str) -> bool:
-    """
-    Strict allowlist: letters, numbers, underscore only; must start with letter/underscore.
-    Prevents SQL injection since identifiers can't be parameterized.
-    """
-    return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name or ""))
-
-
-@app.route("/dbexplorer", methods=["GET"])
-@login_required
-def dbexplorer():
-    tables = _list_tables()
-    return render_template("dbexplorer.html", tables=tables)
-
-
-@app.get("/dbexplorer/data")
-@login_required
-def dbexplorer_data():
-    table = (request.args.get("table") or "").strip()
-    limit_raw = (request.args.get("limit") or "200").strip()
-
-    # Validate limit
-    try:
-        limit = int(limit_raw)
-    except ValueError:
-        limit = 200
-    limit = max(1, min(limit, 1000))  # clamp to 1..1000
-
-    # Validate table name (both regex + must exist in DB)
-    if not _is_safe_identifier(table):
-        abort(400, description="Invalid table name.")
-
-    tables = _list_tables()
-    if table not in tables:
-        abort(404, description="Table not found.")
-
-    # Column metadata
-    desc_rows = db_read(f"DESCRIBE `{table}`", ())
-    columns = [r["Field"] for r in desc_rows]  # mysql DESCRIBE returns Field/Type/Null/Key/Default/Extra
-
-    # Data
-    rows = db_read(f"SELECT * FROM `{table}` LIMIT %s", (limit,))
-
-    return jsonify(
-        {
-            "table": table,
-            "columns": columns,
-            "rows": rows,
-            "limit": limit,
-            "row_count": len(rows),
-        }
-    )
+#Chatgpt
 
 
 
