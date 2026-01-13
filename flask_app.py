@@ -138,5 +138,93 @@ def users():
     users = db_read("SELECT username FROM users ORDER BY username", ())
     return render_template("users.html", users=users)
 
+
+@app.route("/dbexplorer", methods=["GET", "POST"])
+@login_required
+def dbexplorer():
+    # Get DB name from env (same one db.py uses)
+    db_name = os.getenv("DB_DATABASE")
+
+    # All available tables in this database
+    table_rows = db_read(
+        """
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = %s
+        ORDER BY table_name
+        """,
+        (db_name,),
+    )
+    available_tables = [r["table_name"] for r in table_rows]
+    allowed = set(available_tables)
+
+    selected_tables = []
+    bad_tables = []
+    limit = 50
+
+    if request.method == "POST":
+        # limit
+        limit_raw = (request.form.get("limit") or "50").strip()
+        try:
+            limit = int(limit_raw)
+        except ValueError:
+            limit = 50
+        limit = max(1, min(limit, 500))  # clamp 1..500
+
+        # selected via checkboxes
+        selected_tables.extend(request.form.getlist("tables"))
+
+        # selected via manual text field
+        manual = (request.form.get("table_name") or "").strip()
+        if manual:
+            selected_tables.append(manual)
+
+        # normalize + dedupe while preserving order
+        cleaned = []
+        seen = set()
+        for t in selected_tables:
+            t = (t or "").strip()
+            if not t or t in seen:
+                continue
+            seen.add(t)
+            cleaned.append(t)
+        selected_tables = cleaned
+
+    # whitelist validation
+    bad_tables = [t for t in selected_tables if t not in allowed]
+    selected_tables = [t for t in selected_tables if t in allowed]
+
+    # Fetch data for selected tables
+    table_data = {}   # table -> list[dict]
+    table_cols = {}   # table -> list[str]
+
+    for t in selected_tables:
+        # Safe because:
+        # - t is whitelisted from information_schema
+        # - limit is an int we clamp
+        rows = db_read(f"SELECT * FROM `{t}` LIMIT {limit}")
+
+        if rows:
+            cols = list(rows[0].keys())
+        else:
+            # If empty, still show column headers
+            desc = db_read(f"DESCRIBE `{t}`")
+            cols = [d["Field"] for d in desc]
+
+        table_data[t] = rows
+        table_cols[t] = cols
+
+    return render_template(
+        "dbexplorer.html",
+        available_tables=available_tables,
+        selected_tables=selected_tables,
+        bad_tables=bad_tables,
+        limit=limit,
+        table_data=table_data,
+        table_cols=table_cols,
+    )
+
+
+
 if __name__ == "__main__":
     app.run()
