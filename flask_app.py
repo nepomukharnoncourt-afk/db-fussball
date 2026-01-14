@@ -9,6 +9,13 @@ from auth import login_manager, authenticate, register_user
 from flask_login import login_user, logout_user, login_required, current_user
 import logging
 
+#Chatgpt
+#teil von admin login
+from flask import Flask, redirect, render_template, request, url_for, session, abort
+import hmac
+import os
+#Chatpt ende
+
 
 
 
