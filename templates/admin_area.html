@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+    <h2 style="margin:0;">Admin Area</h2>
+
+    <form method="POST" action="{{ url_for('adminlogout') }}">
+      <button class="btn btn-light" type="submit">Admin Logout</button>
+    </form>
+  </div>
+
+  {% if message %}
+    <div style="padding:10px; margin:12px 0; border:1px solid #2b8a3e;">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  {% if error %}
+    <div style="padding:10px; margin:12px 0; border:1px solid #d33;">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <hr>
+
+  <!-- Import -->
+  <h3>Transfermarkt Import</h3>
+  <form method="POST" action="{{ url_for('adminarea') }}" style="margin-bottom:18px;">
+    <input type="hidden" name="action" value="import">
+    <button type="submit" class="btn btn-danger">
+      Tabellen leeren + Import starten
+    </button>
+    <p style="margin-top:8px;">
+      Achtung: Löscht <b>Clubs, Cheftrainer, Spieler, Liga</b> komplett und importiert neu.
+    </p>
+  </form>
+
+  <hr>
+
+  <!-- Search -->
+  <h3>Daten manuell ändern</h3>
+  <form method="POST" action="{{ url_for('adminarea') }}" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+    <input type="hidden" name="action" value="search">
+    <div class="form-group">
+      <label for="q">Suche (Name, Land, IDs, Tore, Position, ...)</label>
+      <input id="q" name="q" class="form-control" style="min-width:320px;" value="{{ q or '' }}" placeholder="z. B. Arsenal, 12, England, Kane..." />
+    </div>
+    <button type="submit" class="btn btn-primary">Suchen</button>
+  </form>
+
+  {% if q %}
+    <p style="margin-top:10px;">Suchbegriff: <b>{{ q }}</b></p>
+  {% endif %}
+
+  <hr>
+
+  <!-- Results -->
+  {% for table_name, rows in results.items() %}
+    <h3 style="margin-top:18px;">{{ table_name }} ({{ rows|length }})</h3>
+
+    {% if rows|length == 0 %}
+      <div style="opacity:.7;">Keine Treffer</div>
+    {% else %}
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        {% for r in rows %}
+          <div style="border:1px solid #ddd; padding:12px; border-radius:8px;">
+            {# determine PK #}
+            {% if table_name == 'Liga' %}
+              {% set pk_name = 'liganr' %}
+              {% set pk_value = r.liganr %}
+            {% elif table_name == 'Clubs' %}
+              {% set pk_name = 'teamnr' %}
+              {% set pk_value = r.teamnr %}
+            {% elif table_name == 'Spieler' %}
+              {% set pk_name = 'spielernr' %}
+              {% set pk_value = r.spielernr %}
+            {% elif table_name == 'Cheftrainer' %}
+              {% set pk_name = 'trainernr' %}
+              {% set pk_value = r.trainernr %}
+            {% endif %}
+
+            <div style="margin-bottom:8px; opacity:.8;">
+              <b>{{ pk_name }}={{ pk_value }}</b>
+            </div>
+
+            <form method="POST" action="{{ url_for('adminarea') }}">
+              <input type="hidden" name="action" value="update">
+              <input type="hidden" name="table" value="{{ table_name }}">
+              <input type="hidden" name="pk_name" value="{{ pk_name }}">
+              <input type="hidden" name="pk_value" value="{{ pk_value }}">
+              <input type="hidden" name="q" value="{{ q or '' }}">
+
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+                {% for k, v in r.items() %}
+                  {% if k != pk_name %}
+                    <div class="form-group">
+                      <label style="font-size:12px; opacity:.8;">{{ k }}</label>
+                      <input class="form-control" name="{{ k }}" value="{{ v }}" />
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <div style="margin-top:10px; display:flex; gap:10px;">
+                <button type="submit" class="btn btn-success">Speichern</button>
+              </div>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
