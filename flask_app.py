@@ -147,87 +147,86 @@ def users():
 @app.route("/dbexplorer", methods=["GET", "POST"])
 @login_required
 def dbexplorer():
-    # Get DB name from env (same one db.py uses)
-    db_name = os.getenv("DB_DATABASE")
-
-    # All available tables in this database
-    table_rows = db_read(
-        """
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = %s
-        ORDER BY table_name
-        """,
-        (db_name,),
-    )
-    available_tables = [r["table_name"] for r in table_rows]
-    allowed = set(available_tables)
-
-    selected_tables = []
-    bad_tables = []
-    limit = 50
+    q = ""
+    club_players = []
+    player_rows = []
+    coach_rows = []
+    league_teams = []
 
     if request.method == "POST":
-        # limit
-        limit_raw = (request.form.get("limit") or "50").strip()
-        try:
-            limit = int(limit_raw)
-        except ValueError:
-            limit = 50
-        limit = max(1, min(limit, 500))  # clamp 1..500
+        q = (request.form.get("q") or "").strip()
 
-        # selected via checkboxes
-        selected_tables.extend(request.form.getlist("tables"))
+        if q:
+            like = f"%{q}%"
 
-        # selected via manual text field
-        manual = (request.form.get("table_name") or "").strip()
-        if manual:
-            selected_tables.append(manual)
+            # 1) Club search -> show all its players (values from Spieler)
+            clubs = db_read("SELECT teamnr, name FROM Clubs WHERE name LIKE %s", (like,))
+            if clubs:
+                teamnrs = [c["teamnr"] for c in clubs]
+                placeholders = ",".join(["%s"] * len(teamnrs))
 
-        # normalize + dedupe while preserving order
-        cleaned = []
-        seen = set()
-        for t in selected_tables:
-            t = (t or "").strip()
-            if not t or t in seen:
-                continue
-            seen.add(t)
-            cleaned.append(t)
-        selected_tables = cleaned
+                club_players = db_read(
+                    f"""
+                    SELECT C.name AS club, S.spielernr, S.team, S.vorname, S.nachname, S.position,
+                           S.tore, S.vorlagen, S.marktwert
+                    FROM Spieler S
+                    JOIN Clubs C ON C.teamnr = S.team
+                    WHERE S.team IN ({placeholders})
+                    ORDER BY C.name, S.nachname, S.vorname
+                    """,
+                    tuple(teamnrs),
+                )
 
-    # whitelist validation
-    bad_tables = [t for t in selected_tables if t not in allowed]
-    selected_tables = [t for t in selected_tables if t in allowed]
+            # 2) Player search (may return multiple if same name)
+            player_rows = db_read(
+                """
+                SELECT C.name AS club, S.spielernr, S.team, S.vorname, S.nachname, S.position,
+                       S.tore, S.vorlagen, S.marktwert
+                FROM Spieler S
+                JOIN Clubs C ON C.teamnr = S.team
+                WHERE CONCAT(S.vorname, ' ', S.nachname) LIKE %s
+                   OR S.vorname LIKE %s
+                   OR S.nachname LIKE %s
+                ORDER BY S.nachname, S.vorname, C.name
+                """,
+                (like, like, like),
+            )
 
-    # Fetch data for selected tables
-    table_data = {}   # table -> list[dict]
-    table_cols = {}   # table -> list[str]
+            # 3) Coach search (may return multiple if same name)
+            coach_rows = db_read(
+                """
+                SELECT C.name AS club, T.trainernr, T.team, T.vorname, T.nachname
+                FROM Cheftrainer T
+                JOIN Clubs C ON C.teamnr = T.team
+                WHERE CONCAT(T.vorname, ' ', T.nachname) LIKE %s
+                   OR T.vorname LIKE %s
+                   OR T.nachname LIKE %s
+                ORDER BY T.nachname, T.vorname, C.name
+                """,
+                (like, like, like),
+            )
 
-    for t in selected_tables:
-        # Safe because:
-        # - t is whitelisted from information_schema
-        # - limit is an int we clamp
-        rows = db_read(f"SELECT * FROM `{t}` LIMIT {limit}")
-
-        if rows:
-            cols = list(rows[0].keys())
-        else:
-            # If empty, still show column headers
-            desc = db_read(f"DESCRIBE `{t}`")
-            cols = [d["Field"] for d in desc]
-
-        table_data[t] = rows
-        table_cols[t] = cols
+            # 4) League search -> show teams ordered by platzierung + the league country
+            league_teams = db_read(
+                """
+                SELECT L.name AS liga, L.land, C.platzierung, C.name AS club, C.tore, C.gegentore
+                FROM Liga L
+                JOIN Clubs C ON C.liga = L.liganr
+                WHERE L.name LIKE %s
+                ORDER BY C.platzierung ASC, C.name
+                """,
+                (like,),
+            )
 
     return render_template(
         "dbexplorer.html",
-        available_tables=available_tables,
-        selected_tables=selected_tables,
-        bad_tables=bad_tables,
-        limit=limit,
-        table_data=table_data,
-        table_cols=table_cols,
+        q=q,
+        club_players=club_players,
+        player_rows=player_rows,
+        coach_rows=coach_rows,
+        league_teams=league_teams,
     )
+
 
 
 
