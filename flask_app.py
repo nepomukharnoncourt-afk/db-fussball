@@ -9,12 +9,11 @@ from auth import login_manager, authenticate, register_user
 from flask_login import login_user, logout_user, login_required, current_user
 import logging
 
-#Chatgpt
-#teil von admin login
+
+#admin login
 from flask import Flask, redirect, render_template, request, url_for, session, abort
 import hmac
 import os
-#Chatpt ende
 
 
 
@@ -32,6 +31,10 @@ W_SECRET = os.getenv("W_SECRET")
 app = Flask(__name__)
 app.config["DEBUG"] = True
 app.secret_key = "supersecret"
+
+#Admin login
+ADMIN_PASSWORD = goatedinfoprojekt
+
 
 # Init auth
 login_manager.init_app(app)
@@ -117,6 +120,41 @@ def logout():
     return redirect(url_for("index"))
 
 
+# admin login
+
+@app.route("/adminlogin", methods=["GET", "POST"])
+@login_required
+def adminlogin():
+    """
+    Admin login: sets session["is_admin"] = True if password matches.
+    """
+    error = None
+
+    # If already admin, you can show the page with a message or redirect
+    if request.method == "POST":
+        pw = request.form.get("admin_password", "")
+
+        # constant-time compare
+        if hmac.compare_digest(pw, ADMIN_PASSWORD):
+            session["is_admin"] = True
+            return redirect(url_for("index"))  # or url_for("dbexplorer") if you want
+        else:
+            error = "Admin-Passwort ist falsch."
+
+    return render_template("admin_login.html", error=error, is_admin=session.get("is_admin", False))
+
+
+@app.route("/adminlogout")
+@login_required
+def adminlogout():
+    session.pop("is_admin", None)
+    return redirect(url_for("index"))
+
+
+
+
+
+
 
 # App routes
 @app.route("/", methods=["GET", "POST"])
@@ -147,6 +185,75 @@ def complete():
 def users():
     users = db_read("SELECT username FROM users ORDER BY username", ())
     return render_template("users.html", users=users)
+
+
+
+# admin login
+def _admin_required():
+    if not session.get("is_admin", False):
+        abort(403)
+
+
+def _get_allowed_tables_and_columns():
+    db_name = os.getenv("DB_DATABASE")
+
+    table_rows = db_read(
+        """
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = %s
+        """,
+        (db_name,),
+    )
+    allowed_tables = {r["table_name"] for r in table_rows}
+
+    # columns per table
+    columns_rows = db_read(
+        """
+        SELECT table_name, column_name
+        FROM information_schema.columns
+        WHERE table_schema = %s
+        """,
+        (db_name,),
+    )
+
+    allowed_cols = {}
+    for r in columns_rows:
+        allowed_cols.setdefault(r["table_name"], set()).add(r["column_name"])
+
+    return allowed_tables, allowed_cols
+
+
+@app.post("/admin/update_cell")
+@login_required
+def admin_update_cell():
+    """
+    Update one cell: expects form fields:
+      table, pk_col, pk_val, col, value
+    """
+    _admin_required()
+
+    table = (request.form.get("table") or "").strip()
+    pk_col = (request.form.get("pk_col") or "").strip()
+    pk_val = request.form.get("pk_val")
+    col = (request.form.get("col") or "").strip()
+    value = request.form.get("value")
+
+    allowed_tables, allowed_cols = _get_allowed_tables_and_columns()
+
+    if table not in allowed_tables:
+        abort(400, description="Invalid table.")
+    if col not in allowed_cols.get(table, set()):
+        abort(400, description="Invalid column.")
+    if pk_col not in allowed_cols.get(table, set()):
+        abort(400, description="Invalid PK column.")
+
+    # Identifiers are safe because they are whitelisted from information_schema
+    q = f"UPDATE `{table}` SET `{col}`=%s WHERE `{pk_col}`=%s"
+    db_write(q, (value, pk_val))
+
+    return redirect(request.referrer or url_for("dbexplorer"))
+
 
 
 #Chatgpt
