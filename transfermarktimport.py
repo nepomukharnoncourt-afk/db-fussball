@@ -14,12 +14,18 @@ BASE = "https://www.transfermarkt.com"
 SEASON_ID = 2025  # Saison 2025/26 bei Transfermarkt
 DELAY_SEC = 2.0   # erhöhen falls Rate-Limit/Block
 
+# Wichtig: "echte" Browser-Header helfen oft gegen 403/Block
 HEADERS = {
     "User-Agent": (
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/120 Safari/537.36"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
     ),
-    "Accept-Language": "en-US,en;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
+    "Connection": "keep-alive",
+    "DNT": "1",
+    "Upgrade-Insecure-Requests": "1",
 }
 
 OUTPUT_SQL = "import_transfermarkt.sql"
@@ -33,12 +39,56 @@ TOP_LEAGUES = [
 ]
 
 # =========================
-# Helper
+# HTTP: robust + proxy-frei
 # =========================
+# Session verwenden, damit Cookies/Keep-Alive genutzt werden
+# UND ganz wichtig: trust_env=False -> ignoriert HTTP_PROXY/HTTPS_PROXY Umgebungsvariablen
+SESSION = requests.Session()
+SESSION.trust_env = False  # <<< DAS ist der Schlüssel gegen ProxyError/403 durch Proxy
+
 def get_html(url: str) -> str:
-    r = requests.get(url, headers=HEADERS, timeout=40)
-    r.raise_for_status()
-    return r.text
+    """
+    Lädt HTML robust:
+    - keine Proxies aus der Umgebung
+    - Retries mit Backoff
+    - klare Fehlermeldung bei 403 (Block/Anti-Bot)
+    """
+    last_err = None
+
+    # kleine Randomisierung im Backoff (ohne random-import: einfache Staffel)
+    backoffs = [0.0, 2.0, 5.0]
+
+    for attempt in range(1, 4):  # 3 Versuche
+        try:
+            # proxies explizit leer (zusätzlich zu trust_env=False)
+            r = SESSION.get(
+                url,
+                headers=HEADERS,
+                timeout=40,
+                proxies={"http": None, "https": None},
+            )
+
+            # Wenn Transfermarkt blockt, kommt oft 403
+            if r.status_code == 403:
+                raise RuntimeError(
+                    f"403 Forbidden bei {url} (Transfermarkt blockt die Anfrage/Proxy/WAF). "
+                    f"Tipp: DELAY_SEC erhöhen, ggf. Headless-Browser nötig."
+                )
+
+            r.raise_for_status()
+            return r.text
+
+        except Exception as e:
+            last_err = e
+            # Backoff vor dem nächsten Versuch (wenn noch einer folgt)
+            if attempt < 3:
+                time.sleep(backoffs[attempt])  # attempt=1 ->2s, attempt=2 ->5s
+            else:
+                break
+
+    # nach 3 Versuchen:
+    raise last_err
+
 
 def soup(url: str) -> BeautifulSoup:
     return BeautifulSoup(get_html(url), "lxml")
