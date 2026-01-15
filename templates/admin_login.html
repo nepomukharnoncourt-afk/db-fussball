@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div style="max-width: 420px; margin: 0 auto;">
+
+    <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 12px;">
+      <h2 style="margin:0;">Admin Login</h2>
+
+      {% if is_admin %}
+        <a href="{{ url_for('adminlogout') }}" class="btn btn-outline-secondary">Admin logout</a>
+      {% endif %}
+    </div>
+
+    {% if is_admin %}
+      <div class="alert alert-success" style="margin-bottom: 12px;">
+        Du bist bereits als Admin eingeloggt.
+      </div>
+      <a href="{{ url_for('index') }}" class="btn btn-primary">Zurück</a>
+
+    {% else %}
+      {% if error %}
+        <div class="alert alert-danger" style="margin-bottom: 12px;">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('adminlogin') }}">
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="admin_password">Admin-Passwort</label>
+          <input
+            id="admin_password"
+            name="admin_password"
+            type="password"
+            class="form-control"
+            placeholder="Admin-Passwort"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Als Admin einloggen</button>
+        <a href="{{ url_for('index') }}" class="btn btn-link">Abbrechen</a>
+      </form>
+    {% endif %}
+
+  </div>
+{% endblock %}
