@@ -33,7 +33,7 @@ app.config["DEBUG"] = True
 app.secret_key = "supersecret"
 
 #Admin login
-ADMIN_PASSWORD = goatedinfoprojekt
+ADMIN_PASSWORD = "goatedinfoprojekt"
 
 
 # Init auth
