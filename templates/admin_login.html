@@ -1,1 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div style="max-width:520px; margin:0 auto;">
+    <h2>Admin Login</h2>
+
+    {% if error %}
+      <div style="padding:10px; margin:10px 0; border:1px solid #d33;">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('adminlogin') }}">
+      <div class="form-group" style="margin-bottom:12px;">
+        <label for="admin_password">Admin-Passwort</label>
+        <input type="password" id="admin_password" name="admin_password" class="form-control" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Als Admin einloggen</button>
+      <a href="{{ url_for('index') }}" class="btn btn-light">Zurück</a>
+    </form>
+  </div>
+{% endblock %}
 
