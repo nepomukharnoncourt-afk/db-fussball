@@ -473,6 +473,80 @@ def adminarea():
             except Exception as e:
                 error = f"Speichern fehlgeschlagen: {e}"
 
+        # ============================
+        # NEW: delete a row
+        # ============================
+        elif action == "delete":
+            table = request.form.get("table")
+            pk_name = request.form.get("pk_name")
+            pk_value = request.form.get("pk_value")
+            q = (request.form.get("q") or "").strip()
+
+            pk_map = {
+                "Liga": "liganr",
+                "Clubs": "teamnr",
+                "Spieler": "spielernr",
+                "Cheftrainer": "trainernr",
+            }
+
+            try:
+                if table not in pk_map or pk_map.get(table) != pk_name:
+                    raise ValueError("Ungültige Delete-Anfrage.")
+
+                db_write(f"DELETE FROM {table} WHERE {pk_name}=%s", (pk_value,))
+                message = f"{table} ({pk_name}={pk_value}) gelöscht."
+
+                if q:
+                    liga_rows, clubs_rows, spieler_rows, coach_rows = do_search(q)
+                    results["Liga"] = liga_rows
+                    results["Clubs"] = clubs_rows
+                    results["Spieler"] = spieler_rows
+                    results["Cheftrainer"] = coach_rows
+
+            except Exception as e:
+                error = f"Löschen fehlgeschlagen: {e}"
+
+        # ============================
+        # NEW: insert a row
+        # ============================
+        elif action == "insert":
+            table = request.form.get("table")
+            q = (request.form.get("q") or "").strip()
+
+            allowed_insert = {
+                "Liga": ("liganr", "name", "land"),
+                "Clubs": ("teamnr", "liga", "tore", "gegentore", "name", "platzierung"),
+                "Spieler": ("spielernr", "team", "vorname", "nachname", "tore", "vorlagen", "marktwert", "position"),
+                "Cheftrainer": ("trainernr", "team", "vorname", "nachname"),
+            }
+
+            try:
+                if table not in allowed_insert:
+                    raise ValueError("Ungültige Tabelle für Insert.")
+
+                cols = allowed_insert[table]
+                values = [request.form.get(c) for c in cols]
+
+                if not values[0]:
+                    raise ValueError("Primärschlüssel darf nicht leer sein.")
+
+                placeholders = ", ".join(["%s"] * len(cols))
+                col_sql = ", ".join(cols)
+                sql = f"INSERT INTO {table} ({col_sql}) VALUES ({placeholders})"
+                db_write(sql, tuple(values))
+
+                message = f"Neue Zeile in {table} eingefügt."
+
+                if q:
+                    liga_rows, clubs_rows, spieler_rows, coach_rows = do_search(q)
+                    results["Liga"] = liga_rows
+                    results["Clubs"] = clubs_rows
+                    results["Spieler"] = spieler_rows
+                    results["Cheftrainer"] = coach_rows
+
+            except Exception as e:
+                error = f"Einfügen fehlgeschlagen: {e}"
+
     return render_template("admin_area.html", message=message, error=error, q=q, results=results)
 
 
