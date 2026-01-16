@@ -56,12 +56,126 @@
 
   <!-- Results -->
   {% for table_name, rows in results.items() %}
-    <h3 style="margin-top:18px;">{{ table_name }} ({{ rows|length }})</h3>
+
+    <!-- NEW: header with + create-row form -->
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px;">
+      <h3 style="margin:0;">{{ table_name }} ({{ rows|length }})</h3>
+
+      <details>
+        <summary class="btn btn-light" style="cursor:pointer; list-style:none;">+</summary>
+        <div style="margin-top:10px; padding:12px; border:1px solid #ddd; border-radius:8px;">
+          <form method="POST" action="{{ url_for('adminarea') }}">
+            <input type="hidden" name="action" value="insert">
+            <input type="hidden" name="table" value="{{ table_name }}">
+            <input type="hidden" name="q" value="{{ q or '' }}">
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+              {% if table_name == 'Liga' %}
+                <div class="form-group">
+                  <label>liganr</label>
+                  <input class="form-control" name="liganr" required>
+                </div>
+                <div class="form-group">
+                  <label>name</label>
+                  <input class="form-control" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label>land</label>
+                  <input class="form-control" name="land" required>
+                </div>
+
+              {% elif table_name == 'Clubs' %}
+                <div class="form-group">
+                  <label>teamnr</label>
+                  <input class="form-control" name="teamnr" required>
+                </div>
+                <div class="form-group">
+                  <label>liga</label>
+                  <input class="form-control" name="liga" required>
+                </div>
+                <div class="form-group">
+                  <label>tore</label>
+                  <input class="form-control" name="tore" value="0">
+                </div>
+                <div class="form-group">
+                  <label>gegentore</label>
+                  <input class="form-control" name="gegentore" value="0">
+                </div>
+                <div class="form-group">
+                  <label>name</label>
+                  <input class="form-control" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label>platzierung</label>
+                  <input class="form-control" name="platzierung" value="1">
+                </div>
+
+              {% elif table_name == 'Spieler' %}
+                <div class="form-group">
+                  <label>spielernr</label>
+                  <input class="form-control" name="spielernr" required>
+                </div>
+                <div class="form-group">
+                  <label>team</label>
+                  <input class="form-control" name="team" required>
+                </div>
+                <div class="form-group">
+                  <label>vorname</label>
+                  <input class="form-control" name="vorname" required>
+                </div>
+                <div class="form-group">
+                  <label>nachname</label>
+                  <input class="form-control" name="nachname">
+                </div>
+                <div class="form-group">
+                  <label>tore</label>
+                  <input class="form-control" name="tore" value="0">
+                </div>
+                <div class="form-group">
+                  <label>vorlagen</label>
+                  <input class="form-control" name="vorlagen" value="0">
+                </div>
+                <div class="form-group">
+                  <label>marktwert</label>
+                  <input class="form-control" name="marktwert" value="0">
+                </div>
+                <div class="form-group">
+                  <label>position</label>
+                  <input class="form-control" name="position">
+                </div>
+
+              {% elif table_name == 'Cheftrainer' %}
+                <div class="form-group">
+                  <label>trainernr</label>
+                  <input class="form-control" name="trainernr" required>
+                </div>
+                <div class="form-group">
+                  <label>team</label>
+                  <input class="form-control" name="team" required>
+                </div>
+                <div class="form-group">
+                  <label>vorname</label>
+                  <input class="form-control" name="vorname" required>
+                </div>
+                <div class="form-group">
+                  <label>nachname</label>
+                  <input class="form-control" name="nachname">
+                </div>
+              {% endif %}
+            </div>
+
+            <div style="margin-top:10px;">
+              <button type="submit" class="btn btn-success">Einfügen</button>
+            </div>
+          </form>
+        </div>
+      </details>
+    </div>
 
     {% if rows|length == 0 %}
-      <div style="opacity:.7;">Keine Treffer</div>
+      <div style="opacity:.7; margin-top:10px;">Keine Treffer</div>
     {% else %}
-      <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
         {% for r in rows %}
           <div style="border:1px solid #ddd; padding:12px; border-radius:8px;">
             {# determine PK #}
@@ -83,6 +197,7 @@
               <b>{{ pk_name }}={{ pk_value }}</b>
             </div>
 
+            <!-- UPDATE form (unchanged) -->
             <form method="POST" action="{{ url_for('adminarea') }}">
               <input type="hidden" name="action" value="update">
               <input type="hidden" name="table" value="{{ table_name }}">
@@ -105,6 +220,17 @@
                 <button type="submit" class="btn btn-success">Speichern</button>
               </div>
             </form>
+
+            <!-- NEW: DELETE form (separate form, no nesting) -->
+            <form method="POST" action="{{ url_for('adminarea') }}" onsubmit="return confirm('Wirklich löschen?');" style="margin-top:10px;">
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="table" value="{{ table_name }}">
+              <input type="hidden" name="pk_name" value="{{ pk_name }}">
+              <input type="hidden" name="pk_value" value="{{ pk_value }}">
+              <input type="hidden" name="q" value="{{ q or '' }}">
+              <button type="submit" class="btn btn-danger">Löschen</button>
+            </form>
+
           </div>
         {% endfor %}
       </div>
