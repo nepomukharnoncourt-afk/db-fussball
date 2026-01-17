@@ -500,7 +500,7 @@ def adminarea():
         # ============================
         # NEW: insert a row
         # ============================
-                elif action == "insert":
+        elif action == "insert":
             table = request.form.get("table")
             q = (request.form.get("q") or "").strip()
 
