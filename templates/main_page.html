@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px;">
+      <a href="{{ url_for('dbexplorer') }}" class="btn btn-primary">DB Explorer</a>
       <a href="{{ url_for('adminlogin') }}" class="btn btn-secondary">Admin</a>
     </div>
 
