@@ -57,7 +57,7 @@
   <!-- Results -->
   {% for table_name, rows in results.items() %}
 
-    <!-- NEW: header with + create-row form -->
+    <!-- Header with + create-row form -->
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px;">
       <h3 style="margin:0;">{{ table_name }} ({{ rows|length }})</h3>
 
@@ -71,10 +71,7 @@
 
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
               {% if table_name == 'Liga' %}
-                <div class="form-group">
-                  <label>liganr</label>
-                  <input class="form-control" name="liganr" required>
-                </div>
+                <!-- AUTO_INCREMENT PK -> no liganr input -->
                 <div class="form-group">
                   <label>name</label>
                   <input class="form-control" name="name" required>
@@ -85,21 +82,18 @@
                 </div>
 
               {% elif table_name == 'Clubs' %}
-                <div class="form-group">
-                  <label>teamnr</label>
-                  <input class="form-control" name="teamnr" required>
-                </div>
+                <!-- AUTO_INCREMENT PK -> no teamnr input -->
                 <div class="form-group">
                   <label>liga</label>
                   <input class="form-control" name="liga" required>
                 </div>
                 <div class="form-group">
                   <label>tore</label>
-                  <input class="form-control" name="tore" value="0">
+                  <input class="form-control" name="tore" value="0" required>
                 </div>
                 <div class="form-group">
                   <label>gegentore</label>
-                  <input class="form-control" name="gegentore" value="0">
+                  <input class="form-control" name="gegentore" value="0" required>
                 </div>
                 <div class="form-group">
                   <label>name</label>
@@ -107,14 +101,11 @@
                 </div>
                 <div class="form-group">
                   <label>platzierung</label>
-                  <input class="form-control" name="platzierung" value="1">
+                  <input class="form-control" name="platzierung" value="1" required>
                 </div>
 
               {% elif table_name == 'Spieler' %}
-                <div class="form-group">
-                  <label>spielernr</label>
-                  <input class="form-control" name="spielernr" required>
-                </div>
+                <!-- AUTO_INCREMENT PK -> no spielernr input -->
                 <div class="form-group">
                   <label>team</label>
                   <input class="form-control" name="team" required>
@@ -129,15 +120,15 @@
                 </div>
                 <div class="form-group">
                   <label>tore</label>
-                  <input class="form-control" name="tore" value="0">
+                  <input class="form-control" name="tore" value="0" required>
                 </div>
                 <div class="form-group">
                   <label>vorlagen</label>
-                  <input class="form-control" name="vorlagen" value="0">
+                  <input class="form-control" name="vorlagen" value="0" required>
                 </div>
                 <div class="form-group">
                   <label>marktwert</label>
-                  <input class="form-control" name="marktwert" value="0">
+                  <input class="form-control" name="marktwert" value="0" required>
                 </div>
                 <div class="form-group">
                   <label>position</label>
@@ -145,10 +136,7 @@
                 </div>
 
               {% elif table_name == 'Cheftrainer' %}
-                <div class="form-group">
-                  <label>trainernr</label>
-                  <input class="form-control" name="trainernr" required>
-                </div>
+                <!-- AUTO_INCREMENT PK -> no trainernr input -->
                 <div class="form-group">
                   <label>team</label>
                   <input class="form-control" name="team" required>
@@ -197,7 +185,7 @@
               <b>{{ pk_name }}={{ pk_value }}</b>
             </div>
 
-            <!-- UPDATE form (unchanged) -->
+            <!-- UPDATE form -->
             <form method="POST" action="{{ url_for('adminarea') }}">
               <input type="hidden" name="action" value="update">
               <input type="hidden" name="table" value="{{ table_name }}">
@@ -221,7 +209,7 @@
               </div>
             </form>
 
-            <!-- NEW: DELETE form (separate form, no nesting) -->
+            <!-- DELETE form (separate, no nesting) -->
             <form method="POST" action="{{ url_for('adminarea') }}" onsubmit="return confirm('Wirklich löschen?');" style="margin-top:10px;">
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="table" value="{{ table_name }}">
