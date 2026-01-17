@@ -509,15 +509,16 @@ def adminarea():
         # ============================
         # NEW: insert a row
         # ============================
-        elif action == "insert":
+                elif action == "insert":
             table = request.form.get("table")
             q = (request.form.get("q") or "").strip()
 
+            # AUTO_INCREMENT PKs: wir insertieren OHNE PK-Spalte
             allowed_insert = {
-                "Liga": ("liganr", "name", "land"),
-                "Clubs": ("teamnr", "liga", "tore", "gegentore", "name", "platzierung"),
-                "Spieler": ("spielernr", "team", "vorname", "nachname", "tore", "vorlagen", "marktwert", "position"),
-                "Cheftrainer": ("trainernr", "team", "vorname", "nachname"),
+                "Liga": ("name", "land"),
+                "Clubs": ("liga", "tore", "gegentore", "name", "platzierung"),
+                "Spieler": ("team", "vorname", "nachname", "tore", "vorlagen", "marktwert", "position"),
+                "Cheftrainer": ("team", "vorname", "nachname"),
             }
 
             try:
@@ -527,16 +528,11 @@ def adminarea():
                 cols = allowed_insert[table]
                 values = [request.form.get(c) for c in cols]
 
-                # PK must exist
-                if not values[0]:
-                    raise ValueError("Primärschlüssel darf nicht leer sein.")
-
-                # Optional: basic int cleanup for numeric fields (prevents MySQL errors like '' -> INT)
+                # Basic int cleanup for numeric fields
                 int_fields = {
-                    "Liga": ("liganr",),
-                    "Clubs": ("teamnr", "liga", "tore", "gegentore", "platzierung"),
-                    "Spieler": ("spielernr", "team", "tore", "vorlagen", "marktwert"),
-                    "Cheftrainer": ("trainernr", "team"),
+                    "Clubs": ("liga", "tore", "gegentore", "platzierung"),
+                    "Spieler": ("team", "tore", "vorlagen", "marktwert"),
+                    "Cheftrainer": ("team",),
                 }
                 for i, col in enumerate(cols):
                     if col in int_fields.get(table, ()):
@@ -544,16 +540,26 @@ def adminarea():
                             values[i] = 0
                         values[i] = int(values[i])
 
+                # Pflichtfelder (sehr minimal)
+                if table == "Liga" and (not values[0] or not values[1]):
+                    raise ValueError("Liga: name und land sind Pflicht.")
+                if table == "Clubs" and (not request.form.get("name") or not request.form.get("liga")):
+                    raise ValueError("Clubs: name und liga sind Pflicht.")
+                if table == "Spieler" and (not request.form.get("vorname") or not request.form.get("team")):
+                    raise ValueError("Spieler: vorname und team sind Pflicht.")
+                if table == "Cheftrainer" and (not request.form.get("vorname") or not request.form.get("team")):
+                    raise ValueError("Cheftrainer: vorname und team sind Pflicht.")
+
                 placeholders = ", ".join(["%s"] * len(cols))
                 col_sql = ", ".join(cols)
                 sql = f"INSERT INTO {table} ({col_sql}) VALUES ({placeholders})"
 
                 db_write(sql, tuple(values))
-
                 message = f"Neue Zeile in {table} eingefügt."
 
-                # IMPORTANT: refresh results so user sees the new row immediately.
-                # If there is a search term, re-run it; otherwise show the just inserted row.
+                # Immer danach Ergebnisse aktualisieren:
+                # 1) wenn Suchbegriff vorhanden -> suche neu
+                # 2) sonst -> zeige letzte 25 Datensätze dieser Tabelle
                 if q:
                     liga_rows, clubs_rows, spieler_rows, coach_rows = do_search(q)
                     results["Liga"] = liga_rows
@@ -561,21 +567,13 @@ def adminarea():
                     results["Spieler"] = spieler_rows
                     results["Cheftrainer"] = coach_rows
                 else:
-                    # show the inserted row even without a search
-                    pk_map = {
-                        "Liga": "liganr",
-                        "Clubs": "teamnr",
-                        "Spieler": "spielernr",
-                        "Cheftrainer": "trainernr",
-                    }
-                    pk = pk_map[table]
-                    pk_value = values[0]
-                    results[table] = db_read(f"SELECT * FROM {table} WHERE {pk}=%s", (pk_value,))
+                    # show something so user sees "it happened"
+                    results[table] = db_read(f"SELECT * FROM {table} ORDER BY 1 DESC LIMIT 25", ())
 
             except Exception as e:
-                # show full DB error so you know why it did not save
                 error = f"Einfügen fehlgeschlagen: {e}"
                 logging.exception("Insert failed")
+
 
 
     return render_template("admin_area.html", message=message, error=error, q=q, results=results)
