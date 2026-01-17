@@ -67,6 +67,12 @@ def login():
 
         if user:
             login_user(user)
+
+            # NEW: respect ?next=... so redirects from @login_required work correctly
+            next_url = request.args.get("next")
+            if next_url:
+                return redirect(next_url)
+
             return redirect(url_for("index"))
 
         error = "Benutzername oder Passwort ist falsch."
@@ -279,8 +285,11 @@ def empty_transfermarkt_tables():
 
 
 @app.route("/adminlogin", methods=["GET", "POST"])
-@login_required
 def adminlogin():
+    # NEW: if not logged in normally, go to normal login first (with next)
+    if not current_user.is_authenticated:
+        return redirect(url_for("login", next=url_for("adminlogin")))
+
     error = None
 
     # already admin? go straight in
@@ -298,15 +307,20 @@ def adminlogin():
 
 
 @app.route("/adminlogout", methods=["POST"])
-@login_required
 def adminlogout():
+    if not current_user.is_authenticated:
+        return redirect(url_for("login", next=url_for("index")))
     session.pop("is_admin", None)
     return redirect(url_for("index"))
 
 
 @app.route("/adminarea", methods=["GET", "POST"])
-@login_required
 def adminarea():
+    # NEW: require normal login first
+    if not current_user.is_authenticated:
+        return redirect(url_for("login", next=url_for("adminarea")))
+
+    # NEW: require admin session flag
     if not admin_required():
         return redirect(url_for("adminlogin"))
 
@@ -465,7 +479,7 @@ def adminarea():
                 error = f"Speichern fehlgeschlagen: {e}"
 
         # ============================
-        # NEW: delete a row
+        # delete a row
         # ============================
         elif action == "delete":
             table = request.form.get("table")
@@ -498,9 +512,9 @@ def adminarea():
                 error = f"Löschen fehlgeschlagen: {e}"
 
         # ============================
-        # NEW: insert a row
+        # insert a row  (FIXED INDENT)
         # ============================
-                elif action == "insert":
+        elif action == "insert":
             table = request.form.get("table")
             q = (request.form.get("q") or "").strip()
 
@@ -549,8 +563,6 @@ def adminarea():
                 message = f"Neue Zeile in {table} eingefügt."
 
                 # Immer danach Ergebnisse aktualisieren:
-                # 1) wenn Suchbegriff vorhanden -> suche neu
-                # 2) sonst -> zeige letzte 25 Datensätze dieser Tabelle
                 if q:
                     liga_rows, clubs_rows, spieler_rows, coach_rows = do_search(q)
                     results["Liga"] = liga_rows
