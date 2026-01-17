@@ -1,53 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px;">
-      <a href="{{ url_for('dbexplorer') }}" class="btn btn-primary">DB Explorer</a>
+<div class="landing-wrap">
+  <div class="landing-card">
+    <h1 class="landing-title">Fussball</h1>
+    <p class="landing-subtitle">Statistiken durchsuchen: Vereine, Spieler, Trainer & Ligen</p>
+
+    <a href="{{ url_for('dbexplorer') }}" class="btn btn-lg btn-primary">
+      Suche Fussballstatistiken
+    </a>
+
+    <div style="margin-top:12px;">
       <a href="{{ url_for('adminlogin') }}" class="btn btn-secondary">Admin</a>
     </div>
+  </div>
+</div>
 
-    <ul class="todo-list">
-          {% for todo in todos %}
-            <li class="todo-item">
-              <form action="/complete" method="POST" class="todo-complete-form">
+<style>
+  /* full-page football background */
+  body {
+    background: url("{{ url_for('static', filename='mpge.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
+  }
 
-                <input type="hidden" name="id" value="{{ todo.id }}">
+  /* center content */
+  .landing-wrap{
+    min-height: calc(100vh - 80px); /* navbar space */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
 
-                <!-- Checkbox triggert Submit -->
-                <input
-                  type="checkbox"
-                  class="todo-checkbox"
-                  id="todo-{{ todo.id }}"
-                  name="complete"
-                  value="1"
-                  onchange="this.form.submit()">
+  /* glassy card */
+  .landing-card{
+    width: min(640px, 92vw);
+    padding: 28px;
+    border-radius: 18px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    text-align:center;
+    backdrop-filter: blur(6px);
+  }
 
-                <label for="todo-{{ todo.id }}" class="todo-content">
-                  {{ todo.content }}
-                  <span class="todo-date">📅 {{ todo.due.strftime('%d.%m.%Y %H:%M') }}</span>
-                </label>
-              </form>
-            </li>
-          {% else %}
-            <div>Nichts zu tun🎉</div>
-          {% endfor %}
-        </ul>
+  .landing-title{
+    margin: 0 0 8px 0;
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
 
-      <div class="todo-form">
-        <form action="." method="POST">
-          <div class="form-group">
-            <label for="contents">TODO</label>
-            <input type="text" id="contents" name="contents" class="form-control"
-              placeholder="Neues TODO eingeben…" required />
-          </div>
-
-          <div class="form-group">
-            <label for="due_at">Fällig am</label>
-            <input id="due_at" name="due_at" type="datetime-local" class="form-control" required>
-            <p class="help-block">Wähle Datum & Uhrzeit (z. B. 07.11.2025 14:30).</p>
-          </div>
-
-          <button type="submit" class="btn btn-primary">Hinzufügen</button>
-        </form>
-      </div>
+  .landing-subtitle{
+    margin: 0 0 18px 0;
+    opacity: 0.95;
+    font-size: 16px;
+  }
+</style>
 {% endblock %}
