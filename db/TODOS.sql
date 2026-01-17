@@ -54,16 +54,16 @@ CREATE TABLE Cheftrainer (
 
 
 
-INSERT INTO Liga (name, Land) Values
-('Bundesliga', 'Deutschland')
-('Laliga', 'Spanien')
+INSERT INTO Liga (name, land) Values
+('Bundesliga', 'Deutschland'),
+('Laliga', 'Spanien');
 
 INSERT INTO Clubs (liga, tore, gegentore, name, platzierung) Values
-(1, 66, 9, 'test', 2)
-(2, 7, 6, 'test2', 3)
+(1, 66, 9, 'test', 2),
+(2, 7, 6, 'test2', 3);
 
 INSERT INTO Spieler (team, vorname, nachname, tore, vorlagen, marktwert, position) Values
-(2, 'nnn', 'hhh', 2, 0, 4000000, 'verteidiger')
+(2, 'nnn', 'hhh', 2, 0, 4000000, 'verteidiger');
 
 INSERT INTO Cheftrainer (team, vorname, nachname) Values
-(2, 'nnnn', 'hhhh')
+(2, 'nnnn', 'hhhh');
