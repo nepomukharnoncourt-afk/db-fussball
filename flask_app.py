@@ -137,7 +137,7 @@ def users():
     return render_template("users.html", users=users)
 
 
-#dbexplorer
+#Chatgpt
 
 @app.route("/dbexplorer", methods=["GET", "POST"])
 @login_required
@@ -500,7 +500,7 @@ def adminarea():
         # ============================
         # NEW: insert a row
         # ============================
-        elif action == "insert":
+                elif action == "insert":
             table = request.form.get("table")
             q = (request.form.get("q") or "").strip()
 
