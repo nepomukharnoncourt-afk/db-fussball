@@ -137,7 +137,7 @@ def users():
     return render_template("users.html", users=users)
 
 
-#Chatgpt
+#dbexplorer
 
 @app.route("/dbexplorer", methods=["GET", "POST"])
 @login_required
